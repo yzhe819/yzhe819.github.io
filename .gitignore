@@ -1,0 +1,6 @@
+node_modules/
+yarn.lock
+yarn.error
+docs/.vuepress/theme
+package-lock.json
+public/
