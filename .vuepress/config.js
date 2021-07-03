@@ -81,12 +81,12 @@ module.exports = {
         // 友链配置
         "friendLink": [{
             "title": "向晚大魔王",
-            "desc": "今夜我们都是顶碗人嗷",
+            "desc": "今夜我们都是顶碗人嗷💜",
             "logo": "/wanwan.jpg",
             "link": "https://space.bilibili.com/672346917?from=search&seid=4668280302037161640",
         }, {
             "title": "嘉然今天吃什么",
-            "desc": "兄弟们反转了，我也是嘉心糖♥",
+            "desc": "兄弟们反转了，我也是嘉心糖🤤🤤🤤",
             "logo": "/ranran.jpg",
             "link": "https://space.bilibili.com/672328094?from=search&seid=12849214525199858120",
         }],
@@ -112,7 +112,7 @@ module.exports = {
                 name: '@vuepress-reco/rss', // 使用名称
                 desc: '生成 RSS 页面', // 描述
                 user: 'yzhe819', // Github 用户名称
-                repo: 'vuepress-theme-rss', // Github 项目名称
+                repo: 'yzhe819.github.io', // Github 项目名称
                 feature: 'feature', // 类型：style（优化主题效果），feature（扩展主题功能）
                 scenes: 'independent' // 使用场景：develop（为主题开发提供组件或方法），independent（单纯扩展主题功能）
             }
