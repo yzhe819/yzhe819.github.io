@@ -97,7 +97,7 @@ module.exports = {
         "searchMaxSuggestions": 10,
         "lastUpdated": "Last Updated",
         "author": "",
-        "authorAvatar": "/avatar.png",
+        "authorAvatar": "/img/avatar.png",
         "record": "MIT License",
         "startYear": "2020"
     },
