@@ -49,6 +49,8 @@ module.exports = {
         "authorAvatar": "avatar.png",
         "startYear": "2020",
         "smooth": "true", //平滑滚动
+        "editLinks": true, // 开启编辑链接功能
+        "editLinkText": '帮助我们改善此页面', // 自定义超链接的文本内容
     },
     // 代码行数是否显示
     "markdown": {

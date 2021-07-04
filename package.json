@@ -15,6 +15,7 @@
     },
     "description": "",
     "dependencies": {
+        "@vssue/api-github-v3": "^1.4.7",
         "vuepress-plugin-code-copy": "^1.0.6"
     }
 }
