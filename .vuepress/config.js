@@ -1,6 +1,6 @@
 module.exports = {
     "title": "yzhe819",
-    "description": "走出心灵要比走进心灵更难",
+    "description": "那些寂寞的花朵, 是春天遗失的嘴唇",
     "dest": "public",
     "head": [
         [

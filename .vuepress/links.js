@@ -8,4 +8,9 @@ module.exports = [{
     "desc": "兄弟们反转了，我也是嘉心糖🤤🤤🤤",
     "logo": "/ranran.jpg",
     "link": "https://space.bilibili.com/672328094?from=search&seid=12849214525199858120",
+}, {
+    "title": "乃琳Queen",
+    "desc": "发病了，发病了，发病了🤤🤤🤤",
+    "logo": "/linlin.jpg",
+    "link": "https://space.bilibili.com/672342685?from=search&seid=13403096185217034955",
 }]

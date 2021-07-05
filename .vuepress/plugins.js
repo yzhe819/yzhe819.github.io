@@ -17,7 +17,7 @@ module.exports = [
         options: {
             appId: 'RAlP9rWo1QHs374uTzUOWVbO-MdYXbMMI', // appId
             appKey: 'y9HIy1Ovkn4AsYPlGyEVtBfH', // appKey
-            placeholder: '今天,我什么也不说,让别人去说...', // 评论框占位提示符
+            placeholder: '来都来了，不说点什么吗...', // 评论框占位提示符
         }
     }],
     ['vuepress-plugin-code-copy', true], // 代码复制插件

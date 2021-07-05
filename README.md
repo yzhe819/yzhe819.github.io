@@ -1,7 +1,6 @@
 ---
 home: true
 heroText: yzhe819
-tagline: 那些寂寞的花朵, 是春天遗失的嘴唇
 # 历史遗留数据，没什么用的
 # heroImage: /hero.png
 # heroImageStyle: {
@@ -13,6 +12,7 @@ tagline: 那些寂寞的花朵, 是春天遗失的嘴唇
 #   borderRadius: '1rem',
 # }
 bgImageStyle: {
+  # width: '100%',
   height: '80vh',
   background-size: 'contain' 
 }
@@ -27,3 +27,6 @@ isShowTitleInHome: false
 # - title: Tomorrow
 #   details: 希望更多的爱好者能够参与进来，帮助这个主题更好的成长
 ---
+
+<Animation />
+<!-- 文字变换特效 -->
