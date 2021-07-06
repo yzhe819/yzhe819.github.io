@@ -69,7 +69,7 @@ export default {
     }
 
     let el = document.querySelector(".hero .description");
-    console.log("el: ", el);
+    // console.log("el: ", el);
 
     if (!el) {
       const timer = setInterval(() => {
@@ -85,7 +85,7 @@ export default {
 
     function init() {
       const fx = new TextScramble(el);
-      const phases = require("./poetry")[2];
+      const phases = require("./poetry")[0];
 
       let counter = 0;
       const next = () => {
