@@ -1,0 +1,75 @@
+baseURL = "http://localhost:1313/"
+languageCode = "en"
+defaultContentLanguage = "en"
+title = "yzhe819"                        # site title                     # 网站标题
+theme = "zozo"
+hasCJKLanguage = true                  # has chinese/japanese/korean ?  # 自动检测是否包含 中文\日文\韩文
+summaryLength = 100
+paginate = 4                           # shows the number of articles   # 首页显示文章数量
+enableEmoji = true
+googleAnalytics = ""                   # your google analytics id       # Google统计代码
+disqusShortname = ""                   # your discuss shortname         # Disqus评论系统代码
+
+pygmentsUseClasses = true
+pygmentCodeFences = true
+pygmentscodefencesguesssyntax = true
+
+[author]                               # essential                      # 必需
+  name = "yzhe819"
+
+[blackfriday]
+  smartypants = false
+
+[[menu.main]]                          # config your menu               # 配置菜单
+  name = "Home"
+  weight = 10
+  identifier = "home"
+  url = "/"
+[[menu.main]]
+  name = "Archive"
+  weight = 20
+  identifier = "archive"
+  url = "/posts/"
+[[menu.main]]
+  name = "Tags"
+  weight = 30
+  identifier = "tags"
+  url = "/tags/"
+[[menu.main]]
+  name = "About"
+  weight = 40
+  identifier = "about"
+  url = "/about/"
+
+[params]
+  subTitle = "yzhe819's Blog"                                       # site's subTitle              # 网站二级标题
+  footerSlogan = " "                                   # site's footer slogan         # 网站页脚标语
+  keywords = ["yzhe819", "zozo"]                                   # site's keywords              # 网站关键字
+  description = "💖"                        # site's description           # 网站描述
+  enableMathJax = true                                                 # enable mathjax               # 是否使用mathjax（数学公式）
+  enableSummary = true                                                 # display the article summary  # 是否显示文章摘要
+  mainSections = ["posts","post"]
+  
+# Valine.
+# You can get your appid and appkey from https://leancloud.cn
+# more info please open https://valine.js.org
+[params.valine]
+  enable = false
+  appId = ""
+  appKey = ""
+  placeholder = " "
+  visitor = true
+
+# Your socail's url
+# 社交地址配置
+[social]
+  github = "https://github.com/yzhe819"
+  # twitter = " "
+  # facebook = " "
+  # weibo = " "
+  # instagram = " "
+
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+  unsafe = true
