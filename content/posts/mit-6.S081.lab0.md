@@ -1,16 +1,14 @@
 ---
-title: "MIT 6.S081: Lab 0"
+title: "MIT 6.S081: Lab 0 搭建环境"
 date: 2022-06-07
 draft: false
 tags: ["中文","操作系统","6.S081"]
 slug: "mit-6.S081.lab0"
 ---
 
-# MIT 6.S081: Lab 0 搭建环境
+> 本篇文章主要记录MIT 6.S081实验环境的搭建。
 
-本篇文章主要记录MIT 6.S081实验环境的搭建。
-
-
+<!--more-->
 
 ## 环境搭建
 
@@ -20,7 +18,6 @@ slug: "mit-6.S081.lab0"
 
 ![官方的搭建步骤](/tools.png)
 
-<!--more-->
 
 
 ### 本地搭建记录
@@ -41,7 +38,7 @@ bash
 lsb_release -a
 ```
 
-**特别注意：**这里检查版本是因为只有 ubuntu 20.04 下面才有对应的某个package的镜像源，如果是版本18是无法查找到的。**如果有需要请自行更新WSL**
+**特别注意**：这里检查版本是因为只有 ubuntu 20.04 下面才有对应的某个package的镜像源，如果是版本18是无法查找到的。**如果有需要请自行更新WSL**
 
 
 
@@ -67,7 +64,7 @@ sudo apt-get remove qemu-system-misc
 sudo apt-get install qemu-system-misc=1:4.2-3ubuntu6
 ```
 
-**特别注意：**这个**qemu-system-misc=1:4.2-3ubuntu6**就是前文提到 **ubuntu 18** 所找不到的包
+**特别注意**：这个**qemu-system-misc=1:4.2-3ubuntu6**就是前文提到 **ubuntu 18** 所找不到的包
 
 
 
@@ -131,7 +128,7 @@ cd xv6-labs-2020
 git checkout util
 ```
 
-**注：**MIT 6.S081 这门课程每个lab对应一个git分支，util分支是第一个lab的分支，这里用这个分支测试之前搭建
+**注**：MIT 6.S081 这门课程每个lab对应一个git分支，util分支是第一个lab的分支，这里用这个分支测试之前搭建
 
 
 
@@ -178,7 +175,7 @@ zombie         2 19 22136
 console        3 20 0
 ```
 
-**注：**偏题了，回归版本管理
+**注**：偏题了，回归版本管理
 
 
 
@@ -190,7 +187,7 @@ console        3 20 0
 git remote add github 你的仓库地址
 ```
 
-**特别注意：**请勿随意修改.git目录和原origin指向的链接
+**特别注意**：请勿随意修改.git目录和原origin指向的链接
 
 
 
@@ -200,11 +197,11 @@ git remote add github 你的仓库地址
 git push github util:util
 ```
 
-**注：**命令中的github是远程主机名，表示会推到上一步推到的链接上
+**注**：命令中的github是远程主机名，表示会推到上一步推到的链接上
 
 
 
-**注：**版本控制的部分[6.S081-All-In-One-Gitbook](http://xv6.dgs.zone/)提供了图文教程，可以进行参考
+**注**：版本控制的部分[6.S081-All-In-One-Gitbook](http://xv6.dgs.zone/)提供了图文教程，可以进行参考
 
 
 
