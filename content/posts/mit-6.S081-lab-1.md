@@ -284,4 +284,153 @@ make: 'kernel/kernel' is up to date.
 == Test sleep, makes syscall == sleep, makes syscall: OK (1.1s)
 ```
 
+
+
+## pingpong（难度：Easy）
+
+编写一个使用UNIX系统调用的程序来在两个进程之间“ping-pong”一个字节，请使用两个管道，每个方向一个。父进程应该向子进程发送一个字节;子进程应该打印“`<pid>: received ping`”，其中`<pid>`是进程ID，并在管道中写入字节发送给父进程，然后退出;父级应该从读取从子进程而来的字节，打印“`<pid>: received pong`”，然后退出。您的解决方案应该在文件*user/pingpong.c*中。
+
+### 提示：
+
+- 使用`pipe`来创造管道
+- 使用`fork`创建子进程
+- 使用`read`从管道中读取数据，并且使用`write`向管道中写入数据
+
+- 使用`getpid`查找调用进程的进程 ID。
+- 将程序添加到Makefile 中的`UPROGS`。
+- xv6 上的用户程序有一组有限的库函数可供他们使用。您可以在 `user/user.h`中看到列表；源（系统调用除外）位于`user/ulib.c`、`user/printf.c`和`user/umalloc.c`中。
+
+
+
+运行程序应得到下面的输出
+
+```bash
+$ make qemu
+...
+init: starting sh
+$ pingpong
+4: received ping
+3: received pong
+$
+```
+
+如果您的程序在两个进程之间交换一个字节并产生如上所示的输出，那么您的解决方案是正确的。
+
+
+
+### 实现：
+
+因为需要在两个进程之间交换一个字节，而一个pipe是单向的（只能从写端到读端），所以我们需要两个pipe，一个负责从父进程写入字节，然后被子进程读取。另外一个则相反。
+
+- **父进程发送ping**：
+
+  他首先需要关闭从自己到子进程管道的读端，然后开始写入字节，写入完成后关闭其写端
+
+  
+
+- **子进程接收ping**：
+
+  他需要先关闭父线程到子线程的写端，然后读取字节，读取完成后关闭读端
+
+  
+
+- **子线程发送pong**:
+
+  他首先需要关闭自己到父线程管道的读端，然后开始写入字节，写入完成后关闭其写端
+
+  
+
+- **父进程接受pong**:
+
+  他需要先关闭子线程到父线程的写端，然后读取字节，读取完成后关闭读端
+
+  
+
+```bash
+#include "kernel/types.h"
+#include "user/user.h"
+
+#define RD 0 // the read end of the pipe
+#define WR 1 // the write end of the pipe
+
+int main(int argc, char *argv[]) {
+  int ptc[2], ctp[2]; // 0 for read, 1 for write
+
+  // create pipe
+  pipe(ptc);
+  pipe(ctp);
+
+  char buf = 'P';
+
+  int pid = fork();
+
+  do {
+    if (pid > 0) {
+      // parent
+      close(ptc[RD]); // close read end of pipe
+      close(ctp[WR]); // close write end of pipe
+
+      // send the ping to the child
+      if (write(ptc[WR], &buf, sizeof(char)) != sizeof(char)) {
+        fprintf(2, "parent write error\n");
+        break;
+      }
+
+      // receive the pong from the child
+      if (read(ctp[RD], &buf, sizeof(char)) != sizeof(char)) {
+        fprintf(2, "parent read error\n");
+        break;
+      } else {
+        fprintf(1, "%d: received pong\n", getpid());
+      }
+
+      close(ctp[WR]); // close write end of pipe
+      close(ptc[RD]); // close read end of pipe
+
+    } else if (pid == 0) {
+      // child
+      close(ptc[WR]); // close write end of pipe
+      close(ctp[RD]); // close read end of pipe
+
+      // receive ping from the parent
+      if (read(ptc[RD], &buf, sizeof(char) != sizeof(char))) {
+        fprintf(2, "child read error\n");
+        break;
+      } else {
+        fprintf(1, "%d: received ping\n", getpid());
+      }
+
+      // send pong to the parent
+      if (write(ctp[WR], &buf, sizeof(char)) != sizeof(char)) {
+        fprintf(2, "child write error\n");
+        break;
+      }
+
+      close(ctp[RD]); // close read end of pipe
+      close(ptc[WR]); // close write end of pipe
+
+    } else {
+      break;
+    }
+    exit(0); // success exit
+  } while (0);
+
+  // error cases
+  fprintf(2, "error\n");
+  close(ptc[RD]);
+  close(ptc[WR]);
+  close(ctp[RD]);
+  close(ctp[WR]);
+  exit(1);
+}
+```
+
+1. `read(fd，buf，n)`系统调用从文件描述符fd读取最多n字节，将它们复制到buf，返回读取的字节数。
+
+2. `write(fd，buf，n)`系统调用将buf中的n字节写入文件描述符fd，并返回写入的字节数。
+
+**注**：用了do和while充当try和catch
+
+
+
 ## 未完待续...
