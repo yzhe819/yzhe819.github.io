@@ -111,7 +111,90 @@
 </span></span><span class=line><span class=cl><span class=o>==</span> Test sleep, no <span class=nv>arguments</span> <span class=o>==</span> sleep, no arguments: OK <span class=o>(</span>2.0s<span class=o>)</span>
 </span></span><span class=line><span class=cl><span class=o>==</span> Test sleep, <span class=nv>returns</span> <span class=o>==</span> sleep, returns: OK <span class=o>(</span>1.1s<span class=o>)</span>
 </span></span><span class=line><span class=cl><span class=o>==</span> Test sleep, makes <span class=nv>syscall</span> <span class=o>==</span> sleep, makes syscall: OK <span class=o>(</span>1.1s<span class=o>)</span>
-</span></span></code></pre></div><h2 id=未完待续>未完待续&mldr;</h2></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
+</span></span></code></pre></div><h2 id=pingpong难度easy>pingpong（难度：Easy）</h2><p>编写一个使用UNIX系统调用的程序来在两个进程之间“ping-pong”一个字节，请使用两个管道，每个方向一个。父进程应该向子进程发送一个字节;子进程应该打印“<code>&lt;pid>: received ping</code>”，其中<code>&lt;pid></code>是进程ID，并在管道中写入字节发送给父进程，然后退出;父级应该从读取从子进程而来的字节，打印“<code>&lt;pid>: received pong</code>”，然后退出。您的解决方案应该在文件<em>user/pingpong.c</em>中。</p><h3 id=提示-1>提示：</h3><ul><li><p>使用<code>pipe</code>来创造管道</p></li><li><p>使用<code>fork</code>创建子进程</p></li><li><p>使用<code>read</code>从管道中读取数据，并且使用<code>write</code>向管道中写入数据</p></li><li><p>使用<code>getpid</code>查找调用进程的进程 ID。</p></li><li><p>将程序添加到Makefile 中的<code>UPROGS</code>。</p></li><li><p>xv6 上的用户程序有一组有限的库函数可供他们使用。您可以在 <code>user/user.h</code>中看到列表；源（系统调用除外）位于<code>user/ulib.c</code>、<code>user/printf.c</code>和<code>user/umalloc.c</code>中。</p></li></ul><p>运行程序应得到下面的输出</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ make qemu
+</span></span><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl>init: starting sh
+</span></span><span class=line><span class=cl>$ pingpong
+</span></span><span class=line><span class=cl>4: received ping
+</span></span><span class=line><span class=cl>3: received pong
+</span></span><span class=line><span class=cl>$
+</span></span></code></pre></div><p>如果您的程序在两个进程之间交换一个字节并产生如上所示的输出，那么您的解决方案是正确的。</p><h3 id=实现-1>实现：</h3><p>因为需要在两个进程之间交换一个字节，而一个pipe是单向的（只能从写端到读端），所以我们需要两个pipe，一个负责从父进程写入字节，然后被子进程读取。另外一个则相反。</p><ul><li><p><strong>父进程发送ping</strong>：</p><p>他首先需要关闭从自己到子进程管道的读端，然后开始写入字节，写入完成后关闭其写端</p></li><li><p><strong>子进程接收ping</strong>：</p><p>他需要先关闭父线程到子线程的写端，然后读取字节，读取完成后关闭读端</p></li><li><p><strong>子线程发送pong</strong>:</p><p>他首先需要关闭自己到父线程管道的读端，然后开始写入字节，写入完成后关闭其写端</p></li><li><p><strong>父进程接受pong</strong>:</p><p>他需要先关闭子线程到父线程的写端，然后读取字节，读取完成后关闭读端</p></li></ul><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1>#include &#34;kernel/types.h&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1>#include &#34;user/user.h&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#define RD 0 // the read end of the pipe</span>
+</span></span><span class=line><span class=cl><span class=c1>#define WR 1 // the write end of the pipe</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int main<span class=o>(</span>int argc, char *argv<span class=o>[])</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  int ptc<span class=o>[</span>2<span class=o>]</span>, ctp<span class=o>[</span>2<span class=o>]</span><span class=p>;</span> // <span class=m>0</span> <span class=k>for</span> read, <span class=m>1</span> <span class=k>for</span> write
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // create pipe
+</span></span><span class=line><span class=cl>  pipe<span class=o>(</span>ptc<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  pipe<span class=o>(</span>ctp<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  char <span class=nv>buf</span> <span class=o>=</span> <span class=s1>&#39;P&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  int <span class=nv>pid</span> <span class=o>=</span> fork<span class=o>()</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>do</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=o>(</span>pid &gt; 0<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>      // parent
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ptc<span class=o>[</span>RD<span class=o>])</span><span class=p>;</span> // close <span class=nb>read</span> end of pipe
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ctp<span class=o>[</span>WR<span class=o>])</span><span class=p>;</span> // close write end of pipe
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      // send the ping to the child
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=o>(</span>write<span class=o>(</span>ptc<span class=o>[</span>WR<span class=o>]</span>, <span class=p>&amp;</span>buf, sizeof<span class=o>(</span>char<span class=o>))</span> !<span class=o>=</span> sizeof<span class=o>(</span>char<span class=o>))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        fprintf<span class=o>(</span>2, <span class=s2>&#34;parent write error\n&#34;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        break<span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      // receive the pong from the child
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=o>(</span>read<span class=o>(</span>ctp<span class=o>[</span>RD<span class=o>]</span>, <span class=p>&amp;</span>buf, sizeof<span class=o>(</span>char<span class=o>))</span> !<span class=o>=</span> sizeof<span class=o>(</span>char<span class=o>))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        fprintf<span class=o>(</span>2, <span class=s2>&#34;parent read error\n&#34;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        break<span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        fprintf<span class=o>(</span>1, <span class=s2>&#34;%d: received pong\n&#34;</span>, getpid<span class=o>())</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ctp<span class=o>[</span>WR<span class=o>])</span><span class=p>;</span> // close write end of pipe
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ptc<span class=o>[</span>RD<span class=o>])</span><span class=p>;</span> // close <span class=nb>read</span> end of pipe
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=o>}</span> <span class=k>else</span> <span class=k>if</span> <span class=o>(</span><span class=nv>pid</span> <span class=o>==</span> 0<span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>      // child
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ptc<span class=o>[</span>WR<span class=o>])</span><span class=p>;</span> // close write end of pipe
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ctp<span class=o>[</span>RD<span class=o>])</span><span class=p>;</span> // close <span class=nb>read</span> end of pipe
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      // receive ping from the parent
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=o>(</span>read<span class=o>(</span>ptc<span class=o>[</span>RD<span class=o>]</span>, <span class=p>&amp;</span>buf, sizeof<span class=o>(</span>char<span class=o>)</span> !<span class=o>=</span> sizeof<span class=o>(</span>char<span class=o>)))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        fprintf<span class=o>(</span>2, <span class=s2>&#34;child read error\n&#34;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        break<span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        fprintf<span class=o>(</span>1, <span class=s2>&#34;%d: received ping\n&#34;</span>, getpid<span class=o>())</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      // send pong to the parent
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=o>(</span>write<span class=o>(</span>ctp<span class=o>[</span>WR<span class=o>]</span>, <span class=p>&amp;</span>buf, sizeof<span class=o>(</span>char<span class=o>))</span> !<span class=o>=</span> sizeof<span class=o>(</span>char<span class=o>))</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        fprintf<span class=o>(</span>2, <span class=s2>&#34;child write error\n&#34;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        break<span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ctp<span class=o>[</span>RD<span class=o>])</span><span class=p>;</span> // close <span class=nb>read</span> end of pipe
+</span></span><span class=line><span class=cl>      close<span class=o>(</span>ptc<span class=o>[</span>WR<span class=o>])</span><span class=p>;</span> // close write end of pipe
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=o>}</span> <span class=k>else</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>      break<span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl>    exit<span class=o>(</span>0<span class=o>)</span><span class=p>;</span> // success <span class=nb>exit</span>
+</span></span><span class=line><span class=cl>  <span class=o>}</span> <span class=k>while</span> <span class=o>(</span>0<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // error cases
+</span></span><span class=line><span class=cl>  fprintf<span class=o>(</span>2, <span class=s2>&#34;error\n&#34;</span><span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  close<span class=o>(</span>ptc<span class=o>[</span>RD<span class=o>])</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  close<span class=o>(</span>ptc<span class=o>[</span>WR<span class=o>])</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  close<span class=o>(</span>ctp<span class=o>[</span>RD<span class=o>])</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  close<span class=o>(</span>ctp<span class=o>[</span>WR<span class=o>])</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  exit<span class=o>(</span>1<span class=o>)</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></div><ol><li><p><code>read(fd，buf，n)</code>系统调用从文件描述符fd读取最多n字节，将它们复制到buf，返回读取的字节数。</p></li><li><p><code>write(fd，buf，n)</code>系统调用将buf中的n字节写入文件描述符fd，并返回写入的字节数。</p></li></ol><p><strong>注</strong>：用了do和while充当try和catch</p><h2 id=未完待续>未完待续&mldr;</h2></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
 <a href=https://yzhe819.github.io/tags/%E4%B8%AD%E6%96%87/>中文</a>
 <a href=https://yzhe819.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a>
 <a href=https://yzhe819.github.io/tags/6.s081/>6.S081</a></span></div></div></div></div><div class=doc_comments></div></div></div></div><a id=back_to_top href=# class=back_to_top><i class=ri-arrow-up-s-line></i></a><footer class=footer><div class=powered_by><a href=https://varkai.com>Designed by VarKai,</a>
