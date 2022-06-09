@@ -433,4 +433,171 @@ int main(int argc, char *argv[]) {
 
 
 
+## Primes(素数，难度：Moderate/Hard)
+
+使用管道编写一个并发版本的初筛。这个想法归功于 Unix 管道的发明者 Doug McIlroy。[本页](http://swtch.com/~rsc/thread/)中间的图片 和周围的文字说明了如何做到这一点。您的解决方案应该在文件`user/primes.c`中。
+
+
+
+您的目标是使用`pipe`和`fork`来设置管道。第一个过程将数字 2 到 35 输入管道。对于每个素数，您将安排创建一个进程，该进程通过管道从其左邻居读取并通过另一管道向其右邻居写入。由于 xv6 的文件描述符和进程数量有限，第一个进程可以在 35 处停止。
+
+**提示**：
+
+- 小心关闭进程不需要的文件描述符，否则你的程序将在第一个进程达到 35 之前运行 xv6 资源不足。
+
+- 一旦第一个进程达到35，它应该使用`wait`等待整个管道终止，包括所有子孙进程等等。因此，主`primes`进程应该只在打印完所有输出之后，并且在所有其他`primes`进程退出之后退出。
+
+  提示：当管道的`write`端关闭时，`read`返回零
+
+- 将 32 位（4 字节）的`int`直接写入管道是最简单的，而不是使用格式化的 ASCII I/O。
+
+- 您应该仅在需要时在管道中创建流程。
+
+- 将程序添加到Makefile 中的`UPROGS`。
+
+如果您的解决方案实现了基于管道的筛选并产生以下输出，则是正确的：
+
+```bash
+$ make qemu
+...
+init: starting sh
+$ primes
+prime 2
+prime 3
+prime 5
+prime 7
+prime 11
+prime 13
+prime 17
+prime 19
+prime 23
+prime 29
+prime 31
+$
+```
+
+
+
+**原始网页的翻译**：
+
+> 考虑生成小于一千的所有素数。Eratosthenes 的筛子可以通过执行以下伪代码的流程管道来模拟：:
+
+```
+p = 从左邻居获取一个数
+print p
+循环：
+    n =
+    如果（p 不除 n）
+        将 n 发送到右邻居，则从左邻居获取一个数
+```
+
+> 生成进程可以将数字 2, 3, 4, ..., 1000 输入管道的左端：行中的第一个进程消除 2 的倍数，第二个消除 3 的倍数，第三个消除5的倍数，以此类推：
+![示意图](/sieve.gif)
+
+
+
+### 实现：
+
+```c
+#include "kernel/types.h"
+#include "user/user.h"
+
+#define RD 0
+#define WR 1
+
+// the child receives the primes from the parent
+void primes(int *p);
+// print the first prime and return it
+int get_first_prime(int *p);
+// transmit the data to the next child
+void transmit_data(int *p, int *p_next, int val);
+
+int main(int argc, char *argv[]) {
+  int p[2]; // 0 for read and 1 for write
+  pipe(p);
+
+  for (int i = 2; i <= 35; i++) {
+    write(p[WR], &i, sizeof(int));
+  }
+
+  int pid = fork();
+  if (pid < 0) {
+    printf("fork failed\n");
+    close(p[RD]);
+    close(p[WR]);
+    exit(1);
+  } else if (pid == 0) {
+    // child process
+    close(p[WR]);
+    primes(p);
+    close(p[RD]);
+    exit(0);
+  } else {
+    // parent process
+    close(p[RD]);
+    close(p[WR]);
+    wait(0);
+    exit(0);
+  }
+}
+
+void primes(int *p) {
+  int prime_num = get_first_prime(p);
+  int p_next[2]; // 0 for read and WR for write
+  pipe(p_next);
+
+  int pid = fork();
+  if (pid < 0) {
+    printf("fork failed\n");
+    // close the parent pipe
+    close(p[RD]);
+    close(p_next[RD]);
+    close(p_next[WR]);
+    exit(WR);
+  } else if (pid == 0) {
+    // child process
+    close(p[0]);
+    close(p_next[WR]);
+    primes(p_next);
+    close(p_next[RD]);
+    exit(0);
+  } else {
+    // parent process
+    close(p_next[RD]);
+    transmit_data(p, p_next, prime_num);
+    close(p[RD]);
+    close(p_next[WR]);
+    wait(0);
+    exit(0);
+  }
+}
+
+int get_first_prime(int *p) {
+  int num;
+  int len = read(p[RD], &num, sizeof(int));
+  if (len == 0) {
+    // no data to read
+    close(p[RD]);
+    exit(0);
+  } else {
+    printf("prime %d\n", num); // print the first prime number
+    return num; // actually, the first received number must be the prime number
+  }
+}
+
+void transmit_data(int *p, int *p_next, int val) {
+  int num;
+  // continue to read the next number
+  while (read(p[RD], &num, sizeof(int))) {
+    if (num % val) {
+      write(p_next[WR], &num, sizeof(int)); // only write the prime number
+    }
+  }
+}
+```
+
+**注**：其实就是使用递归新建管道，然后筛出符合条件的数，再传到子进程里
+
+
+
 ## 未完待续...
