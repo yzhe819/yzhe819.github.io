@@ -274,7 +274,7 @@
 </span></span><span class=line><span class=cl>    <span class=n>exit</span><span class=p>(</span><span class=n>WR</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=n>pid</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// child process
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=mi>0</span><span class=p>]);</span>
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
 </span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>p_next</span><span class=p>[</span><span class=n>WR</span><span class=p>]);</span>
 </span></span><span class=line><span class=cl>    <span class=n>primes</span><span class=p>(</span><span class=n>p_next</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>p_next</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
@@ -312,7 +312,60 @@
 </span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>}</span>
 </span></span><span class=line><span class=cl>  <span class=p>}</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p><strong>注</strong>：其实就是使用递归新建管道，然后筛出符合条件的数，再传到子进程里</p><h2 id=未完待续>未完待续&mldr;</h2></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
+</span></span></code></pre></div><p><strong>注</strong>：其实就是使用递归新建管道，然后筛出符合条件的数，再传到子进程里</p><h3 id=更新>更新：</h3><p>之前的实现写的有点长了，更新一个短一点的mini版</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;kernel/types.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;user/user.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=c1>// 0 for read and 1 for write
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=cp>#define RD 0
+</span></span></span><span class=line><span class=cl><span class=cp>#define WR 1
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>primes</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>p</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>p</span><span class=p>[</span><span class=mi>2</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=n>pipe</span><span class=p>(</span><span class=n>p</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>fork</span><span class=p>()</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span> <span class=c1>// child process
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>primes</span><span class=p>(</span><span class=n>p</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>else</span> <span class=p>{</span> <span class=c1>// parent process
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>2</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;=</span> <span class=mi>35</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>write</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>WR</span><span class=p>],</span> <span class=o>&amp;</span><span class=n>i</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=kt>int</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>WR</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=n>wait</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>exit</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>primes</span><span class=p>(</span><span class=kt>int</span> <span class=o>*</span><span class=n>p</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>prime</span><span class=p>,</span> <span class=n>num</span><span class=p>,</span> <span class=n>p_next</span><span class=p>[</span><span class=mi>2</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>WR</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>read</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>],</span> <span class=o>&amp;</span><span class=n>prime</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=kt>int</span><span class=p>))</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=n>exit</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>printf</span><span class=p>(</span><span class=s>&#34;prime %d</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>prime</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>pipe</span><span class=p>(</span><span class=n>p_next</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>fork</span><span class=p>()</span> <span class=o>&gt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span> <span class=c1>// parent process
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>close</span><span class=p>(</span><span class=n>p_next</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=p>(</span><span class=n>read</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>],</span> <span class=o>&amp;</span><span class=n>num</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=kt>int</span><span class=p>)))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=p>(</span><span class=n>num</span> <span class=o>%</span> <span class=n>prime</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>write</span><span class=p>(</span><span class=n>p_next</span><span class=p>[</span><span class=n>WR</span><span class=p>],</span> <span class=o>&amp;</span><span class=n>num</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=kt>int</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>p_next</span><span class=p>[</span><span class=n>WR</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=n>wait</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>else</span> <span class=p>{</span> <span class=c1>// child process
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>primes</span><span class=p>(</span><span class=n>p_next</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h2 id=未完待续>未完待续&mldr;</h2></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
 <a href=https://yzhe819.github.io/tags/%E4%B8%AD%E6%96%87/>中文</a>
 <a href=https://yzhe819.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a>
 <a href=https://yzhe819.github.io/tags/6.s081/>6.S081</a></span></div></div></div></div><div class=doc_comments></div></div></div></div><a id=back_to_top href=# class=back_to_top><i class=ri-arrow-up-s-line></i></a><footer class=footer><div class=powered_by><a href=https://varkai.com>Designed by VarKai,</a>
