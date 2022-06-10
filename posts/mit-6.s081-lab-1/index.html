@@ -365,7 +365,85 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>  <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><h2 id=未完待续>未完待续&mldr;</h2></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
+</span></span></code></pre></div><h2 id=find难度moderate>find（难度：Moderate）</h2><p>写一个简化版本的UNIX的<code>find</code>程序：查找目录树中具有特定名称的所有文件，你的解决方案应该放在<em>user/find.c</em></p><p>提示：</p><ul><li>查看<em><strong>user/ls.c</strong></em>文件学习如何读取目录</li><li>使用递归允许<code>find</code>下降到子目录中</li><li>不要在<code>.</code>和<code>..</code>目录中递归</li><li>对文件系统的更改会在qemu的运行过程中一直保持；要获得一个干净的文件系统，请运行<code>make clean</code>，然后<code>make qemu</code></li><li>你将会使用到C语言的字符串，要学习它请看《C程序设计语言》（K&R）,例如第5.5节</li><li>注意在C语言中不能像python一样使用“<code>==</code>”对字符串进行比较，而应当使用<code>strcmp()</code></li><li>将程序加入到Makefile的<code>UPROGS</code></li></ul><p>如果你的程序输出下面的内容，那么它是正确的（当文件系统中包含文件<em><strong>b</strong></em>和<em><strong>a/b</strong></em>的时候）</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ make qemu
+</span></span><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl>init: starting sh
+</span></span><span class=line><span class=cl>$ <span class=nb>echo</span> &gt; b
+</span></span><span class=line><span class=cl>$ mkdir a
+</span></span><span class=line><span class=cl>$ <span class=nb>echo</span> &gt; a/b
+</span></span><span class=line><span class=cl>$ find . b
+</span></span><span class=line><span class=cl>./b
+</span></span><span class=line><span class=cl>./a/b
+</span></span><span class=line><span class=cl>$
+</span></span></code></pre></div><h3 id=实现-3>实现：</h3><p>首先在主程序里面判断一下参数数量，然后find函数里面先检查一下存不存在，能不能获取stat，是不是dir，以及路径是否过长。通过测试之后，我们就能用while loop不断读取。如果当前目录是空的就直接返回，不然先把名字加到buf里面，然后读取stat。如果不能读取就下一个文件，当找到符合文件名字的时候直接打印。（因为刚刚已经把名字更新到buf内了）如果遇到文件夹就递归查询，同时注意不要在<code>.</code>和<code>..</code>目录中递归</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;kernel/types.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;kernel/stat.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;user/user.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;kernel/fs.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>find</span><span class=p>(</span><span class=kt>char</span> <span class=o>*</span><span class=n>path</span><span class=p>,</span> <span class=kt>char</span> <span class=o>*</span><span class=n>fileName</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=n>buf</span><span class=p>[</span><span class=mi>512</span><span class=p>],</span> <span class=o>*</span><span class=n>p</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>fd</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=n>dirent</span> <span class=n>de</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=n>stat</span> <span class=n>st</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>((</span><span class=n>fd</span> <span class=o>=</span> <span class=n>open</span><span class=p>(</span><span class=n>path</span><span class=p>,</span> <span class=mi>0</span><span class=p>))</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>fprintf</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span> <span class=s>&#34;ls: cannot open %s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>path</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>fstat</span><span class=p>(</span><span class=n>fd</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>st</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>fprintf</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span> <span class=s>&#34;ls: cannot stat %s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>path</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>fd</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>st</span><span class=p>.</span><span class=n>type</span> <span class=o>!=</span> <span class=n>T_DIR</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>fprintf</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span> <span class=s>&#34;find: %s is not a directory !</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>path</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>close</span><span class=p>(</span><span class=n>fd</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>strlen</span><span class=p>(</span><span class=n>path</span><span class=p>)</span> <span class=o>+</span> <span class=mi>1</span> <span class=o>+</span> <span class=n>DIRSIZ</span> <span class=o>+</span> <span class=mi>1</span> <span class=o>&gt;</span> <span class=k>sizeof</span> <span class=n>buf</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;find: path too long</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c1>// add the &#39;/&#39; to the path end
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>strcpy</span><span class=p>(</span><span class=n>buf</span><span class=p>,</span> <span class=n>path</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span> <span class=o>=</span> <span class=n>buf</span> <span class=o>+</span> <span class=n>strlen</span><span class=p>(</span><span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=o>*</span><span class=n>p</span><span class=o>++</span> <span class=o>=</span> <span class=sc>&#39;/&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>while</span> <span class=p>(</span><span class=n>read</span><span class=p>(</span><span class=n>fd</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>de</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>de</span><span class=p>))</span> <span class=o>==</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>de</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>de</span><span class=p>.</span><span class=n>inum</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>memmove</span><span class=p>(</span><span class=n>p</span><span class=p>,</span> <span class=n>de</span><span class=p>.</span><span class=n>name</span><span class=p>,</span> <span class=n>DIRSIZ</span><span class=p>);</span> <span class=c1>// copy the name to the buffer
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>p</span><span class=p>[</span><span class=n>DIRSIZ</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>               <span class=c1>// add the null terminator
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=k>if</span> <span class=p>(</span><span class=n>stat</span><span class=p>(</span><span class=n>buf</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>st</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>printf</span><span class=p>(</span><span class=s>&#34;find: cannot stat %s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>strcmp</span><span class=p>(</span><span class=n>de</span><span class=p>.</span><span class=n>name</span><span class=p>,</span> <span class=n>fileName</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>printf</span><span class=p>(</span><span class=s>&#34;%s</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>buf</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=n>st</span><span class=p>.</span><span class=n>type</span> <span class=o>==</span> <span class=n>T_DIR</span> <span class=o>&amp;&amp;</span> <span class=n>strcmp</span><span class=p>(</span><span class=n>p</span><span class=p>,</span> <span class=s>&#34;.&#34;</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>               <span class=n>strcmp</span><span class=p>(</span><span class=n>p</span><span class=p>,</span> <span class=s>&#34;..&#34;</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// do not recurse into the current directory or the parent directory
+</span></span></span><span class=line><span class=cl><span class=c1></span>      <span class=n>find</span><span class=p>(</span><span class=n>buf</span><span class=p>,</span> <span class=n>fileName</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>close</span><span class=p>(</span><span class=n>fd</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>int</span> <span class=n>argc</span><span class=p>,</span> <span class=kt>char</span> <span class=o>*</span><span class=n>argv</span><span class=p>[])</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>argc</span> <span class=o>==</span> <span class=mi>3</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>find</span><span class=p>(</span><span class=n>argv</span><span class=p>[</span><span class=mi>1</span><span class=p>],</span> <span class=n>argv</span><span class=p>[</span><span class=mi>2</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;usage: fing &lt;PATH&gt; &lt;FILENAME&gt;</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>exit</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>注：这部分有点不太理解，几个方法和结构体不是很熟悉，学习完文件系统再回头看这部分</p><h2 id=未完待续>未完待续&mldr;</h2></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
 <a href=https://yzhe819.github.io/tags/%E4%B8%AD%E6%96%87/>中文</a>
 <a href=https://yzhe819.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a>
 <a href=https://yzhe819.github.io/tags/6.s081/>6.S081</a></span></div></div></div></div><div class=doc_comments></div></div></div></div><a id=back_to_top href=# class=back_to_top><i class=ri-arrow-up-s-line></i></a><footer class=footer><div class=powered_by><a href=https://varkai.com>Designed by VarKai,</a>
