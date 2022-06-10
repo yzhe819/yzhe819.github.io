@@ -662,4 +662,110 @@ void primes(int *p) {
 
 
 
+## find（难度：Moderate）  
+
+写一个简化版本的UNIX的`find`程序：查找目录树中具有特定名称的所有文件，你的解决方案应该放在*user/find.c*
+
+提示：
+
+- 查看***user/ls.c***文件学习如何读取目录
+- 使用递归允许`find`下降到子目录中
+- 不要在`.`和`..`目录中递归
+- 对文件系统的更改会在qemu的运行过程中一直保持；要获得一个干净的文件系统，请运行`make clean`，然后`make qemu`
+- 你将会使用到C语言的字符串，要学习它请看《C程序设计语言》（K&R）,例如第5.5节
+- 注意在C语言中不能像python一样使用“`==`”对字符串进行比较，而应当使用`strcmp()`
+- 将程序加入到Makefile的`UPROGS`
+
+如果你的程序输出下面的内容，那么它是正确的（当文件系统中包含文件***b***和***a/b***的时候）
+
+```bash
+$ make qemu
+...
+init: starting sh
+$ echo > b
+$ mkdir a
+$ echo > a/b
+$ find . b
+./b
+./a/b
+$
+```
+
+### 实现：
+
+首先在主程序里面判断一下参数数量，然后find函数里面先检查一下存不存在，能不能获取stat，是不是dir，以及路径是否过长。通过测试之后，我们就能用while loop不断读取。如果当前目录是空的就直接返回，不然先把名字加到buf里面，然后读取stat。如果不能读取就下一个文件，当找到符合文件名字的时候直接打印。（因为刚刚已经把名字更新到buf内了）如果遇到文件夹就递归查询，同时注意不要在`.`和`..`目录中递归
+
+```c
+#include "kernel/types.h"
+#include "kernel/stat.h"
+#include "user/user.h"
+#include "kernel/fs.h"
+
+void find(char *path, char *fileName) {
+  char buf[512], *p;
+  int fd;
+  struct dirent de;
+  struct stat st;
+
+  if ((fd = open(path, 0)) < 0) {
+    fprintf(2, "ls: cannot open %s\n", path);
+    return;
+  }
+
+  if (fstat(fd, &st) < 0) {
+    fprintf(2, "ls: cannot stat %s\n", path);
+    close(fd);
+    return;
+  }
+
+  if (st.type != T_DIR) {
+    fprintf(2, "find: %s is not a directory !\n", path);
+    close(fd);
+    return;
+  }
+
+  if (strlen(path) + 1 + DIRSIZ + 1 > sizeof buf) {
+    printf("find: path too long\n");
+    return;
+  }
+
+  // add the '/' to the path end
+  strcpy(buf, path);
+  p = buf + strlen(buf);
+  *p++ = '/';
+
+  while (read(fd, &de, sizeof(de)) == sizeof(de)) {
+
+    if (de.inum == 0)
+      continue;
+    memmove(p, de.name, DIRSIZ); // copy the name to the buffer
+    p[DIRSIZ] = 0;               // add the null terminator
+    if (stat(buf, &st) < 0) {
+      printf("find: cannot stat %s\n", buf);
+      continue;
+    }
+
+    if (strcmp(de.name, fileName) == 0) {
+      printf("%s\n", buf);
+    } else if (st.type == T_DIR && strcmp(p, ".") != 0 &&
+               strcmp(p, "..") != 0) {
+      // do not recurse into the current directory or the parent directory
+      find(buf, fileName);
+    }
+  }
+  close(fd);
+}
+
+int main(int argc, char *argv[]) {
+  if (argc == 3) {
+    find(argv[1], argv[2]);
+  } else {
+    printf("usage: fing <PATH> <FILENAME>\n");
+  }
+  exit(0);
+}
+```
+
+注：这部分有点不太理解，几个方法和结构体不是很熟悉，学习完文件系统再回头看这部分
+
 ## 未完待续...
