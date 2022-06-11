@@ -768,4 +768,198 @@ int main(int argc, char *argv[]) {
 
 注：这部分有点不太理解，几个方法和结构体不是很熟悉，学习完文件系统再回头看这部分
 
-## 未完待续...
+
+
+## xargs（难度：Moderate）       
+
+编写一个简化版UNIX的`xargs`程序：它从标准输入中按行读取，并且为每一行执行一个命令，将行作为参数提供给命令。你的解决方案应该在***user/xargs.c***
+
+下面的例子解释了`xargs`的行为
+
+```bash
+$ echo hello too | xargs echo bye
+bye hello too
+$
+```
+
+注意，这里的命令是`echo bye`，额外的参数是`hello too`，这样就组成了命令`echo bye hello too`，此命令输出`bye hello too`
+
+请注意，UNIX上的`xargs`进行了优化，一次可以向该命令提供更多的参数。 我们不需要您进行此优化。 要使UNIX上的`xargs`表现出本实验所实现的方式，请将`-n`选项设置为1。例如
+
+```bash
+$ echo "1\n2" | xargs -n 1 echo line
+line 1
+line 2
+$
+```
+
+**提示：**
+
+- 使用`fork`和`exec`对每行输入调用命令，在父进程中使用`wait`等待子进程完成命令。
+- 要读取单个输入行，请一次读取一个字符，直到出现换行符（'\n'）。
+- ***kernel/param.h***声明`MAXARG`，如果需要声明`argv`数组，这可能很有用。
+- 将程序添加到***Makefile***中的`UPROGS`。
+- 对文件系统的更改会在qemu的运行过程中保持不变；要获得一个干净的文件系统，请运行`make clean`，然后`make qemu`
+
+`xargs`、`find`和`grep`结合得很好
+
+```bash
+$ find . b | xargs grep hello
+```
+
+将对“`.`”下面的目录中名为***b***的每个文件运行`grep hello`。
+
+要测试您的`xargs`方案是否正确，请运行shell脚本***xargstest.sh***。如果您的解决方案产生以下输出，则是正确的：
+
+```bash
+$ make qemu
+...
+init: starting sh
+$ sh < xargstest.sh
+$ $ $ $ $ $ hello
+hello
+hello
+$ $
+```
+
+你可能不得不回去修复你的`find`程序中的bug。输出有许多`$`，因为xv6 shell没有意识到它正在处理来自文件而不是控制台的命令，并为文件中的每个命令打印`$`。
+
+### 实现：
+
+```c
+#include "kernel/types.h"
+#include "kernel/param.h"
+#include "user/user.h"
+
+#define MAXSZ 512
+
+enum state {
+  S_WAIT,         // the initial state, or the current is a space
+  S_ARG,          // the current char is a arg
+  S_ARG_END,      // the end of the arg
+  S_ARG_LINE_END, // new line next to the arg, "abc\n"
+  S_LINE_END,     // the new line next to the space, "abc \n"
+  S_END,          // end, EOF
+};
+
+enum char_type { C_SPACE, C_CHAR, C_LINE_END };
+
+enum char_type get_char_type(char c) {
+  switch (c) {
+  case ' ':
+    return C_SPACE;
+  case '\n':
+    return C_LINE_END;
+  default:
+    return C_CHAR;
+  }
+}
+
+enum state transform_state(enum state cur, enum char_type ct) {
+  switch (cur) {
+  case S_WAIT:
+    if (ct == C_SPACE)
+      return S_WAIT;
+    if (ct == C_LINE_END)
+      return S_LINE_END;
+    if (ct == C_CHAR)
+      return S_ARG;
+    break;
+  case S_ARG:
+    if (ct == C_SPACE)
+      return S_ARG_END;
+    if (ct == C_LINE_END)
+      return S_ARG_LINE_END;
+    if (ct == C_CHAR)
+      return S_ARG;
+    break;
+  case S_ARG_END:
+  case S_ARG_LINE_END:
+  case S_LINE_END:
+    if (ct == C_SPACE)
+      return S_WAIT;
+    if (ct == C_LINE_END)
+      return S_LINE_END;
+    if (ct == C_CHAR)
+      return S_ARG;
+    break;
+  default:
+    break;
+  }
+  return S_END;
+}
+
+void clearArgv(char *x_argv[MAXARG], int beg) {
+  for (int i = beg; i < MAXARG; ++i)
+    x_argv[i] = 0;
+}
+
+int main(int argc, char *argv[]) {
+  if (argc < 2) {
+    printf("xargs: minium amount of args is 2 !\n");
+    exit(1);
+  } else if (argc - 1 >= MAXARG) {
+    printf("xargs: maxium amount of args is %d !\n", MAXARG);
+    exit(1);
+  }
+
+  char lines[MAXSZ];
+  char *p = lines;
+  char *x_argv[MAXARG] = {0}; // used to store the args
+
+  // record all the args
+  // start 1 for skip the first space
+  for (int i = 1; i < argc; i++) {
+    x_argv[i - 1] = argv[i];
+  }
+
+  int start = 0;
+  int end = 0;
+  int current = argc - 1;
+
+  enum state st = S_WAIT; // the initial state
+
+  while (st != S_END) {
+    if (read(0, p, sizeof(char)) != sizeof(char)) {
+      st = S_END;
+    } else {
+      st = transform_state(st, get_char_type(*p));
+    }
+
+    if (++end >= MAXSZ) {
+      printf("xargs: arguments too long.\n");
+      exit(1);
+    }
+
+    switch (st) {
+    case S_WAIT:
+      ++start;
+      break;
+    case S_ARG_END:
+      x_argv[current++] = &lines[start];
+      start = end;
+      *p = '\0';
+      break;
+    case S_ARG_LINE_END:
+      x_argv[current++] = &lines[start];
+    case S_LINE_END:
+      start = end;
+      *p = '\0';
+      if (fork() == 0) {
+        exec(argv[1], x_argv);
+      }
+      current = argc - 1;
+      clearArgv(x_argv, current);
+      wait(0);
+      break;
+    default:
+      break;
+    }
+
+    ++p;
+  }
+  exit(0);
+}
+```
+
+**注**：这部分是用了状态机，感觉跟之前写编译器的时候很像，有种莫名既视感。这部分也需要回头看一下
