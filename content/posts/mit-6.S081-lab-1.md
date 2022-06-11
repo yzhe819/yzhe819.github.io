@@ -8,7 +8,19 @@ slug: "mit-6.S081-lab-1"
 
 > 本篇文章是第一个lab的记录
 
+完成了基础的实验室内容
+
+挑战练习有时间会再看看
+
+官网链接：[Lab: Xv6 and Unix utilities](https://pdos.csail.mit.edu/6.S081/2020/labs/util.html)
+
+代码仓库：[Github](https://github.com/yzhe819/MIT-6.S081/tree/util)
+
 <!--more-->
+
+[TOC]
+
+
 
 ## 启动xv6(难度：Easy)
 
@@ -666,7 +678,7 @@ void primes(int *p) {
 
 写一个简化版本的UNIX的`find`程序：查找目录树中具有特定名称的所有文件，你的解决方案应该放在*user/find.c*
 
-提示：
+### 提示：
 
 - 查看***user/ls.c***文件学习如何读取目录
 - 使用递归允许`find`下降到子目录中
@@ -793,7 +805,7 @@ line 2
 $
 ```
 
-**提示：**
+### 提示：
 
 - 使用`fork`和`exec`对每行输入调用命令，在父进程中使用`wait`等待子进程完成命令。
 - 要读取单个输入行，请一次读取一个字符，直到出现换行符（'\n'）。
