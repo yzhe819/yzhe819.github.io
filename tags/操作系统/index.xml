@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>操作系统 on yzhe819</title><link>https://yzhe819.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link><description>Recent content in 操作系统 on yzhe819</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 08 Jun 2022 00:02:26 +1200</lastBuildDate><atom:link href="https://yzhe819.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml"/><item><title>Mit 6.S081 Lab 1 Xv6 和 Unix 实用程序</title><link>https://yzhe819.github.io/posts/mit-6.s081-lab-1/</link><pubDate>Wed, 08 Jun 2022 00:02:26 +1200</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081-lab-1/</guid><description>&lt;blockquote>
 &lt;p>本篇文章是第一个lab的记录&lt;/p>
-&lt;/blockquote></description></item><item><title>Mit 6.S081 实验室指导</title><link>https://yzhe819.github.io/posts/mit-6.s081-lab-guidance/</link><pubDate>Tue, 07 Jun 2022 23:43:45 +1200</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081-lab-guidance/</guid><description>&lt;blockquote>
+&lt;/blockquote>
+&lt;p>完成了基础的实验室内容&lt;/p>
+&lt;p>挑战练习有时间会再看看&lt;/p>
+&lt;p>官网链接：&lt;a href="https://pdos.csail.mit.edu/6.S081/2020/labs/util.html">Lab: Xv6 and Unix utilities&lt;/a>&lt;/p>
+&lt;p>代码仓库：&lt;a href="https://github.com/yzhe819/MIT-6.S081/tree/util">Github&lt;/a>&lt;/p></description></item><item><title>Mit 6.S081 实验室指导</title><link>https://yzhe819.github.io/posts/mit-6.s081-lab-guidance/</link><pubDate>Tue, 07 Jun 2022 23:43:45 +1200</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081-lab-guidance/</guid><description>&lt;blockquote>
 &lt;p>本篇文章是原始Lab guidance的机器翻译&lt;/p>
 &lt;/blockquote>
 &lt;p>介绍作业难度的划分以及一些调试建议&lt;/p>

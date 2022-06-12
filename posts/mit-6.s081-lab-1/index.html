@@ -1,6 +1,10 @@
 <!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="yzhe819"><title>Mit 6.S081 Lab 1 Xv6 和 Unix 实用程序 ｜ yzhe819</title><meta name=description content=" 本篇文章是第一个lab的记录
+完成了基础的实验室内容
+挑战练习有时间会再看看
+官网链接：Lab: Xv6 and Unix utilities
+代码仓库：Github
 "><meta name=keywords content="yzhe819,zozo"><link rel="shortcut icon" href=https://yzhe819.github.io/images/favicon.ico><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/normalize.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/zozo.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/highlight.css></head><body><div class="main animate__animated animate__fadeInDown"><div class="nav_container animated fadeInDown"><div class=site_nav id=site_nav><ul><li><a href=/>Home</a></li><li><a href=/posts/>Archive</a></li><li><a href=/tags/>Tags</a></li><li><a href=/about/>About</a></li></ul></div><div class=menu_icon><a id=menu_icon><i class=ri-menu-line></i></a></div></div><div class="header animated fadeInDown"><div class=site_title_container><div class=site_title><h1><a href=https://yzhe819.github.io/><span>yzhe819</span></a></h1></div><div class=description><p class=sub_title>yzhe819's Blog</p><div class=my_socials><a href=https://github.com/yzhe819 title=github target=_blank><i class=ri-github-fill></i></a>
-<a href=https://yzhe819.github.io/index.xml type=application/rss+xml title=rss target=_blank><i class=ri-rss-fill></i></a></div></div></div></div><div class=content><div class=post_page><div class="post animate__animated animate__fadeInDown"><div class="post_title post_detail_title"><h2><a href=/posts/mit-6.s081-lab-1/>Mit 6.S081 Lab 1 Xv6 和 Unix 实用程序</a></h2><span class=date>2022.06.08</span></div><div class="post_content markdown"><blockquote><p>本篇文章是第一个lab的记录</p></blockquote><h2 id=启动xv6难度easy>启动xv6(难度：Easy)</h2><p>之前已经搭建好环境并且下载好xv6了。</p><p>进入到对应的路径并且切换到util分支上：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ <span class=nb>cd</span> xv6-labs-2020
+<a href=https://yzhe819.github.io/index.xml type=application/rss+xml title=rss target=_blank><i class=ri-rss-fill></i></a></div></div></div></div><div class=content><div class=post_page><div class="post animate__animated animate__fadeInDown"><div class="post_title post_detail_title"><h2><a href=/posts/mit-6.s081-lab-1/>Mit 6.S081 Lab 1 Xv6 和 Unix 实用程序</a></h2><span class=date>2022.06.08</span></div><div class="post_content markdown"><blockquote><p>本篇文章是第一个lab的记录</p></blockquote><p>完成了基础的实验室内容</p><p>挑战练习有时间会再看看</p><p>官网链接：<a href=https://pdos.csail.mit.edu/6.S081/2020/labs/util.html>Lab: Xv6 and Unix utilities</a></p><p>代码仓库：<a href=https://github.com/yzhe819/MIT-6.S081/tree/util>Github</a></p><p>[TOC]</p><h2 id=启动xv6难度easy>启动xv6(难度：Easy)</h2><p>之前已经搭建好环境并且下载好xv6了。</p><p>进入到对应的路径并且切换到util分支上：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ <span class=nb>cd</span> xv6-labs-2020
 </span></span><span class=line><span class=cl>$ git checkout util
 </span></span><span class=line><span class=cl>Branch <span class=s1>&#39;util&#39;</span> <span class=nb>set</span> up to track remote branch <span class=s1>&#39;util&#39;</span> from <span class=s1>&#39;origin&#39;</span>.
 </span></span><span class=line><span class=cl>Switched to a new branch <span class=s1>&#39;util&#39;</span>
@@ -365,7 +369,7 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>  <span class=n>close</span><span class=p>(</span><span class=n>p</span><span class=p>[</span><span class=n>RD</span><span class=p>]);</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><h2 id=find难度moderate>find（难度：Moderate）</h2><p>写一个简化版本的UNIX的<code>find</code>程序：查找目录树中具有特定名称的所有文件，你的解决方案应该放在<em>user/find.c</em></p><p>提示：</p><ul><li>查看<em><strong>user/ls.c</strong></em>文件学习如何读取目录</li><li>使用递归允许<code>find</code>下降到子目录中</li><li>不要在<code>.</code>和<code>..</code>目录中递归</li><li>对文件系统的更改会在qemu的运行过程中一直保持；要获得一个干净的文件系统，请运行<code>make clean</code>，然后<code>make qemu</code></li><li>你将会使用到C语言的字符串，要学习它请看《C程序设计语言》（K&R）,例如第5.5节</li><li>注意在C语言中不能像python一样使用“<code>==</code>”对字符串进行比较，而应当使用<code>strcmp()</code></li><li>将程序加入到Makefile的<code>UPROGS</code></li></ul><p>如果你的程序输出下面的内容，那么它是正确的（当文件系统中包含文件<em><strong>b</strong></em>和<em><strong>a/b</strong></em>的时候）</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ make qemu
+</span></span></code></pre></div><h2 id=find难度moderate>find（难度：Moderate）</h2><p>写一个简化版本的UNIX的<code>find</code>程序：查找目录树中具有特定名称的所有文件，你的解决方案应该放在<em>user/find.c</em></p><h3 id=提示-2>提示：</h3><ul><li>查看<em><strong>user/ls.c</strong></em>文件学习如何读取目录</li><li>使用递归允许<code>find</code>下降到子目录中</li><li>不要在<code>.</code>和<code>..</code>目录中递归</li><li>对文件系统的更改会在qemu的运行过程中一直保持；要获得一个干净的文件系统，请运行<code>make clean</code>，然后<code>make qemu</code></li><li>你将会使用到C语言的字符串，要学习它请看《C程序设计语言》（K&R）,例如第5.5节</li><li>注意在C语言中不能像python一样使用“<code>==</code>”对字符串进行比较，而应当使用<code>strcmp()</code></li><li>将程序加入到Makefile的<code>UPROGS</code></li></ul><p>如果你的程序输出下面的内容，那么它是正确的（当文件系统中包含文件<em><strong>b</strong></em>和<em><strong>a/b</strong></em>的时候）</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ make qemu
 </span></span><span class=line><span class=cl>...
 </span></span><span class=line><span class=cl>init: starting sh
 </span></span><span class=line><span class=cl>$ <span class=nb>echo</span> &gt; b
@@ -443,7 +447,156 @@
 </span></span><span class=line><span class=cl>  <span class=p>}</span>
 </span></span><span class=line><span class=cl>  <span class=n>exit</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></div><p>注：这部分有点不太理解，几个方法和结构体不是很熟悉，学习完文件系统再回头看这部分</p><h2 id=未完待续>未完待续&mldr;</h2></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
+</span></span></code></pre></div><p>注：这部分有点不太理解，几个方法和结构体不是很熟悉，学习完文件系统再回头看这部分</p><h2 id=xargs难度moderate>xargs（难度：Moderate）</h2><p>编写一个简化版UNIX的<code>xargs</code>程序：它从标准输入中按行读取，并且为每一行执行一个命令，将行作为参数提供给命令。你的解决方案应该在<em><strong>user/xargs.c</strong></em></p><p>下面的例子解释了<code>xargs</code>的行为</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ <span class=nb>echo</span> hello too <span class=p>|</span> xargs <span class=nb>echo</span> bye
+</span></span><span class=line><span class=cl>bye hello too
+</span></span><span class=line><span class=cl>$
+</span></span></code></pre></div><p>注意，这里的命令是<code>echo bye</code>，额外的参数是<code>hello too</code>，这样就组成了命令<code>echo bye hello too</code>，此命令输出<code>bye hello too</code></p><p>请注意，UNIX上的<code>xargs</code>进行了优化，一次可以向该命令提供更多的参数。 我们不需要您进行此优化。 要使UNIX上的<code>xargs</code>表现出本实验所实现的方式，请将<code>-n</code>选项设置为1。例如</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ <span class=nb>echo</span> <span class=s2>&#34;1\n2&#34;</span> <span class=p>|</span> xargs -n <span class=m>1</span> <span class=nb>echo</span> line
+</span></span><span class=line><span class=cl>line <span class=m>1</span>
+</span></span><span class=line><span class=cl>line <span class=m>2</span>
+</span></span><span class=line><span class=cl>$
+</span></span></code></pre></div><h3 id=提示-3>提示：</h3><ul><li>使用<code>fork</code>和<code>exec</code>对每行输入调用命令，在父进程中使用<code>wait</code>等待子进程完成命令。</li><li>要读取单个输入行，请一次读取一个字符，直到出现换行符（&rsquo;\n&rsquo;）。</li><li><em><strong>kernel/param.h</strong></em>声明<code>MAXARG</code>，如果需要声明<code>argv</code>数组，这可能很有用。</li><li>将程序添加到<em><strong>Makefile</strong></em>中的<code>UPROGS</code>。</li><li>对文件系统的更改会在qemu的运行过程中保持不变；要获得一个干净的文件系统，请运行<code>make clean</code>，然后<code>make qemu</code></li></ul><p><code>xargs</code>、<code>find</code>和<code>grep</code>结合得很好</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ find . b <span class=p>|</span> xargs grep hello
+</span></span></code></pre></div><p>将对“<code>.</code>”下面的目录中名为<em><strong>b</strong></em>的每个文件运行<code>grep hello</code>。</p><p>要测试您的<code>xargs</code>方案是否正确，请运行shell脚本<em><strong>xargstest.sh</strong></em>。如果您的解决方案产生以下输出，则是正确的：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ make qemu
+</span></span><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl>init: starting sh
+</span></span><span class=line><span class=cl>$ sh &lt; xargstest.sh
+</span></span><span class=line><span class=cl>$ $ $ $ $ $ hello
+</span></span><span class=line><span class=cl>hello
+</span></span><span class=line><span class=cl>hello
+</span></span><span class=line><span class=cl>$ $
+</span></span></code></pre></div><p>你可能不得不回去修复你的<code>find</code>程序中的bug。输出有许多<code>$</code>，因为xv6 shell没有意识到它正在处理来自文件而不是控制台的命令，并为文件中的每个命令打印<code>$</code>。</p><h3 id=实现-4>实现：</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;kernel/types.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;kernel/param.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&#34;user/user.h&#34;</span><span class=cp>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=cp>#define MAXSZ 512
+</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span><span class=line><span class=cl><span class=k>enum</span> <span class=n>state</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>S_WAIT</span><span class=p>,</span>         <span class=c1>// the initial state, or the current is a space
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>S_ARG</span><span class=p>,</span>          <span class=c1>// the current char is a arg
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>S_ARG_END</span><span class=p>,</span>      <span class=c1>// the end of the arg
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>S_ARG_LINE_END</span><span class=p>,</span> <span class=c1>// new line next to the arg, &#34;abc\n&#34;
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>S_LINE_END</span><span class=p>,</span>     <span class=c1>// the new line next to the space, &#34;abc \n&#34;
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=n>S_END</span><span class=p>,</span>          <span class=c1>// end, EOF
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>enum</span> <span class=n>char_type</span> <span class=p>{</span> <span class=n>C_SPACE</span><span class=p>,</span> <span class=n>C_CHAR</span><span class=p>,</span> <span class=n>C_LINE_END</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>enum</span> <span class=n>char_type</span> <span class=nf>get_char_type</span><span class=p>(</span><span class=kt>char</span> <span class=n>c</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>switch</span> <span class=p>(</span><span class=n>c</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=sc>&#39; &#39;</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>C_SPACE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=sc>&#39;\n&#39;</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>C_LINE_END</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>default</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>C_CHAR</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>enum</span> <span class=n>state</span> <span class=nf>transform_state</span><span class=p>(</span><span class=k>enum</span> <span class=n>state</span> <span class=n>cur</span><span class=p>,</span> <span class=k>enum</span> <span class=n>char_type</span> <span class=n>ct</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>switch</span> <span class=p>(</span><span class=n>cur</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=nl>S_WAIT</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_SPACE</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_WAIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_LINE_END</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_LINE_END</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_CHAR</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_ARG</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=nl>S_ARG</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_SPACE</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_ARG_END</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_LINE_END</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_ARG_LINE_END</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_CHAR</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_ARG</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=nl>S_ARG_END</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=nl>S_ARG_LINE_END</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=k>case</span> <span class=nl>S_LINE_END</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_SPACE</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_WAIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_LINE_END</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_LINE_END</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>ct</span> <span class=o>==</span> <span class=n>C_CHAR</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=n>S_ARG</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>default</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>S_END</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>clearArgv</span><span class=p>(</span><span class=kt>char</span> <span class=o>*</span><span class=n>x_argv</span><span class=p>[</span><span class=n>MAXARG</span><span class=p>],</span> <span class=kt>int</span> <span class=n>beg</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>beg</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>MAXARG</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>x_argv</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>int</span> <span class=n>argc</span><span class=p>,</span> <span class=kt>char</span> <span class=o>*</span><span class=n>argv</span><span class=p>[])</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>argc</span> <span class=o>&lt;</span> <span class=mi>2</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;xargs: minium amount of args is 2 !</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>exit</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=n>argc</span> <span class=o>-</span> <span class=mi>1</span> <span class=o>&gt;=</span> <span class=n>MAXARG</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;xargs: maxium amount of args is %d !</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>MAXARG</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>exit</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=n>lines</span><span class=p>[</span><span class=n>MAXSZ</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>lines</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=o>*</span><span class=n>x_argv</span><span class=p>[</span><span class=n>MAXARG</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>};</span> <span class=c1>// used to store the args
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=c1>// record all the args
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=c1>// start 1 for skip the first space
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>argc</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>x_argv</span><span class=p>[</span><span class=n>i</span> <span class=o>-</span> <span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=n>argv</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>start</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>end</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>current</span> <span class=o>=</span> <span class=n>argc</span> <span class=o>-</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>enum</span> <span class=n>state</span> <span class=n>st</span> <span class=o>=</span> <span class=n>S_WAIT</span><span class=p>;</span> <span class=c1>// the initial state
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=k>while</span> <span class=p>(</span><span class=n>st</span> <span class=o>!=</span> <span class=n>S_END</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>read</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>p</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=kt>char</span><span class=p>))</span> <span class=o>!=</span> <span class=k>sizeof</span><span class=p>(</span><span class=kt>char</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>st</span> <span class=o>=</span> <span class=n>S_END</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>st</span> <span class=o>=</span> <span class=n>transform_state</span><span class=p>(</span><span class=n>st</span><span class=p>,</span> <span class=n>get_char_type</span><span class=p>(</span><span class=o>*</span><span class=n>p</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>++</span><span class=n>end</span> <span class=o>&gt;=</span> <span class=n>MAXSZ</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>printf</span><span class=p>(</span><span class=s>&#34;xargs: arguments too long.</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=n>exit</span><span class=p>(</span><span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>switch</span> <span class=p>(</span><span class=n>st</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=nl>S_WAIT</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>      <span class=o>++</span><span class=n>start</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=nl>S_ARG_END</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>      <span class=n>x_argv</span><span class=p>[</span><span class=n>current</span><span class=o>++</span><span class=p>]</span> <span class=o>=</span> <span class=o>&amp;</span><span class=n>lines</span><span class=p>[</span><span class=n>start</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>      <span class=n>start</span> <span class=o>=</span> <span class=n>end</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=sc>&#39;\0&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=nl>S_ARG_LINE_END</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>      <span class=n>x_argv</span><span class=p>[</span><span class=n>current</span><span class=o>++</span><span class=p>]</span> <span class=o>=</span> <span class=o>&amp;</span><span class=n>lines</span><span class=p>[</span><span class=n>start</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=k>case</span> <span class=nl>S_LINE_END</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>      <span class=n>start</span> <span class=o>=</span> <span class=n>end</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=sc>&#39;\0&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=p>(</span><span class=n>fork</span><span class=p>()</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>exec</span><span class=p>(</span><span class=n>argv</span><span class=p>[</span><span class=mi>1</span><span class=p>],</span> <span class=n>x_argv</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=n>current</span> <span class=o>=</span> <span class=n>argc</span> <span class=o>-</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>      <span class=n>clearArgv</span><span class=p>(</span><span class=n>x_argv</span><span class=p>,</span> <span class=n>current</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=n>wait</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>      <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>default</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>      <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=o>++</span><span class=n>p</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>exit</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p><strong>注</strong>：这部分是用了状态机，感觉跟之前写编译器的时候很像，有种莫名既视感。这部分也需要回头看一下</p></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
 <a href=https://yzhe819.github.io/tags/%E4%B8%AD%E6%96%87/>中文</a>
 <a href=https://yzhe819.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/>操作系统</a>
 <a href=https://yzhe819.github.io/tags/6.s081/>6.S081</a></span></div></div></div></div><div class=doc_comments></div></div></div></div><a id=back_to_top href=# class=back_to_top><i class=ri-arrow-up-s-line></i></a><footer class=footer><div class=powered_by><a href=https://varkai.com>Designed by VarKai,</a>
