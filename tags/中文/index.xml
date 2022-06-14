@@ -9,8 +9,10 @@
 &lt;/blockquote>
 &lt;p>介绍作业难度的划分以及一些调试建议&lt;/p>
 &lt;p>原文链接为：&lt;a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html">Lab guidance&lt;/a>&lt;/p></description></item><item><title>Mit 6.S081 Lab 0 搭建环境</title><link>https://yzhe819.github.io/posts/mit-6.s081.lab-0/</link><pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081.lab-0/</guid><description>&lt;blockquote>
-&lt;p>本篇文章主要记录MIT 6.S081实验环境的搭建。&lt;/p>
-&lt;/blockquote></description></item><item><title>以梦为马</title><link>https://yzhe819.github.io/posts/dream-as-a-horse/</link><pubDate>Sun, 29 May 2022 00:00:00 +0000</pubDate><guid>https://yzhe819.github.io/posts/dream-as-a-horse/</guid><description>&lt;blockquote>
+&lt;p>本篇文章主要记录MIT 6.S081实验环境的搭建和版本管理的配置。&lt;/p>
+&lt;/blockquote>
+&lt;p>官网链接：&lt;a href="https://pdos.csail.mit.edu/6.828/2020/tools.html">Lab: Tools&lt;/a>&lt;/p>
+&lt;p>本地环境为：Windows 10 + WSL2 (Ubuntu 20.04.4 LTS)&lt;/p></description></item><item><title>以梦为马</title><link>https://yzhe819.github.io/posts/dream-as-a-horse/</link><pubDate>Sun, 29 May 2022 00:00:00 +0000</pubDate><guid>https://yzhe819.github.io/posts/dream-as-a-horse/</guid><description>&lt;blockquote>
 &lt;p>我必将失败 但诗歌本身以太阳必将胜利&lt;/p>
 &lt;/blockquote>
 &lt;h1 id="诗歌原文">诗歌原文&lt;/h1>
