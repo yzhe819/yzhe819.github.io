@@ -18,9 +18,6 @@ slug: "mit-6.S081-lab-1"
 
 <!--more-->
 
-[TOC]
-
-
 
 ## 启动xv6(难度：Easy)
 
