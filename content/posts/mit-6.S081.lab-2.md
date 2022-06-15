@@ -303,3 +303,120 @@ syscall(void)
 }
 ```
 
+
+
+# 系统信息（moderate）    
+
+在这个作业中，您将添加一个系统调用`sysinfo`，它收集有关正在运行的系统的信息。系统调用采用一个参数：一个指向`struct sysinfo`的指针（参见**kernel/sysinfo.h**）。内核应该填写这个结构的字段：`freemem`字段应该设置为空闲内存的字节数，`nproc`字段应该设置为`state`字段不为`UNUSED`的进程数。我们提供了一个测试程序`sysinfotest`；如果输出“**sysinfotest: OK**”则通过。
+
+### 提示：
+
+- 在**Makefile**的**UPROGS**中添加`$U/_sysinfotest`
+- 当运行`make qemu`时，**user/sysinfotest.c**将会编译失败，遵循和上一个作业一样的步骤添加`sysinfo`系统调用。要在**user/user.h**中声明`sysinfo()`的原型，需要预先声明`struct sysinfo`的存在：
+
+```c
+struct sysinfo;
+int sysinfo(struct sysinfo *);
+```
+
+一旦修复了编译问题，就运行`sysinfotest`；但由于您还没有在内核中实现系统调用，执行将失败。
+
+- `sysinfo`需要将一个`struct sysinfo`复制回用户空间；请参阅`sys_fstat()`(**kernel/sysfile.c**)和`filestat()`(**kernel/file.c**)以获取如何使用`copyout()`执行此操作的示例。
+- 要获取空闲内存量，请在**kernel/kalloc.c**中添加一个函数
+- 要获取可用进程数，请在**kernel/proc.c**中添加一个函数
+
+### 实现：
+
+重复一下之前trace里面的配置：
+
+添加$U/_sysinfotest，添加函数声明到user.h （记得根据提示声明struct sysinfo），添加entry到usys.pl，添加syscall number到syscall.h，然后加入到syscall函数数组中。这是我的提交：[sysinfo config](https://github.com/yzhe819/MIT-6.S081/commit/33d3d512d66a9292b9566fe024bdb6df72f1dbc2)
+
+然后根据提示在**kernel/kalloc.c**中添加一个函数，用于获取空闲内存量。
+
+直接历遍链表计数，最后乘一下内存页的大小就好，可以加个锁避免冲突。
+
+```c
+uint64
+freemem(){
+  struct run *r = kmem.freelist;
+  uint64 num = 0;
+  acquire(&kmem.lock);
+  while(r){
+    num++;
+    r = r->next;
+  }
+  release(&kmem.lock);
+  return num * PGSIZE;
+}
+```
+
+然后在**kernel/proc.c**中添加一个函数，用于获取可用进程数。把所有状态是UNUSED的记一下就可以。
+
+```c
+uint64
+nproc(void){
+  uint64 n = 0;
+  for(int i = 0; i < NPROC; i++){
+    if(proc[i].state != UNUSED){
+      n++;
+    }
+  }
+  return n;
+}
+```
+
+最后在**kernel/sysproc.c**里面调用：
+
+```c
+uint64
+sys_sysinfo(void)
+{
+  struct sysinfo info;
+  info.freemem = freemem();
+  info.nproc = nproc();
+
+  // get the virtual address
+  uint64 addr;
+  if(argaddr(0, &addr) < 0)
+    return -1;
+
+  if(copyout(myproc()->pagetable, addr, (char *)&info, sizeof info) < 0)
+      return -1;
+
+  return 0;
+}
+```
+
+重点是前三行代码，直接调用我们的代码就好。后面的那部分是用于将一个`struct sysinfo`复制回用户空间，就是提示里面说到的copyout用法。
+
+到此我们的lab 2已经结束了。
+
+## 测试与修复：
+
+在提交前我们跑一下测试吧，推迟qemu，然后运行：
+
+```bash
+$ ./grade-lab-syscall
+/usr/bin/env: ‘python\r’: No such file or directory
+```
+
+好吧，我再修复一下，然后再次运行：
+
+```bash
+$ dos2unix ./grade-lab-syscall
+$ ./grade-lab-syscall
+```
+
+结果依然报错：
+![报错提示](/lab2_fail.png)
+
+报错提示程序没有打印`3: syscall read -> 966`而是打印了`3: syscall read -> 986`
+
+想了想后，恍然大悟，需要给readme也调整一下格式：
+
+```bash
+$ dos2unix ./readme
+```
+
+再次运行，终于全部通过了：
+![通过](/lab2_pass.png)
