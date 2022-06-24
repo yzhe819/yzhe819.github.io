@@ -1,5 +1,5 @@
 ---
-title: "Mit 6.S081 Lab 1 Xv6 和 Unix 实用程序"
+title: "MIT 6.S081 Lab 1 Xv6 和 Unix 实用程序"
 date: 2022-06-08T00:02:26+12:00
 draft: false
 tags: ["中文","操作系统","6.S081"]

@@ -1,5 +1,5 @@
 ---
-title: "Mit 6.S081 Lab 0 搭建环境"
+title: "MIT 6.S081 Lab 0 搭建环境"
 date: 2022-06-07
 draft: false
 tags: ["中文","操作系统","6.S081"]

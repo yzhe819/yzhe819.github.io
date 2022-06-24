@@ -1,5 +1,5 @@
 ---
-title: "Mit 6.S081 Lab 3 页表"
+title: "MIT 6.S081 Lab 3 页表"
 date: 2022-06-19T01:55:24+12:00
 draft: false
 tags: ["中文","操作系统","6.S081"]
