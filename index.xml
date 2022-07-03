@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>yzhe819</title><link>https://yzhe819.github.io/</link><description>Recent content on yzhe819</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 19 Jun 2022 01:55:24 +1200</lastBuildDate><atom:link href="https://yzhe819.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>MIT 6.S081 Lab 3 页表</title><link>https://yzhe819.github.io/posts/mit-6.s081.lab-3/</link><pubDate>Sun, 19 Jun 2022 01:55:24 +1200</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081.lab-3/</guid><description>&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>yzhe819</title><link>https://yzhe819.github.io/</link><description>Recent content on yzhe819</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 19 Jun 2022 01:55:24 +1200</lastBuildDate><atom:link href="https://yzhe819.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>MIT 6.S081 Lab 3 页表</title><link>https://yzhe819.github.io/posts/mit-6.s081-lab-3/</link><pubDate>Sun, 19 Jun 2022 01:55:24 +1200</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081-lab-3/</guid><description>&lt;blockquote>
 &lt;p>本篇文章是第三个lab的记录&lt;/p>
 &lt;/blockquote>
 &lt;p>官网链接：&lt;a href="https://pdos.csail.mit.edu/6.828/2020/labs/pgtbl.html">Lab: Page tables&lt;/a>&lt;/p>
 &lt;p>代码仓库：&lt;a href="https://github.com/yzhe819/MIT-6.S081/tree/pgtbl">Github&lt;/a>&lt;/p></description></item><item><title>Installing Go in WSL2</title><link>https://yzhe819.github.io/posts/study-go/</link><pubDate>Fri, 17 Jun 2022 14:49:41 +1200</pubDate><guid>https://yzhe819.github.io/posts/study-go/</guid><description>&lt;blockquote>
 &lt;p>Just a record of installing Go in WSL from the command line.&lt;/p>
-&lt;/blockquote></description></item><item><title>MIT 6.S081 Lab 2 系统调用</title><link>https://yzhe819.github.io/posts/mit-6.s081.lab-2/</link><pubDate>Tue, 14 Jun 2022 22:19:02 +1200</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081.lab-2/</guid><description>&lt;blockquote>
+&lt;/blockquote></description></item><item><title>MIT 6.S081 Lab 2 系统调用</title><link>https://yzhe819.github.io/posts/mit-6.s081-lab-2/</link><pubDate>Tue, 14 Jun 2022 22:19:02 +1200</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081-lab-2/</guid><description>&lt;blockquote>
 &lt;p>本篇文章是第二个lab的记录&lt;/p>
 &lt;/blockquote>
 &lt;p>完成了基础的实验室内容&lt;/p>
@@ -20,7 +20,7 @@
 &lt;p>本篇文章是原始Lab guidance的机器翻译&lt;/p>
 &lt;/blockquote>
 &lt;p>介绍作业难度的划分以及一些调试建议&lt;/p>
-&lt;p>原文链接为：&lt;a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html">Lab guidance&lt;/a>&lt;/p></description></item><item><title>MIT 6.S081 Lab 0 搭建环境</title><link>https://yzhe819.github.io/posts/mit-6.s081.lab-0/</link><pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081.lab-0/</guid><description>&lt;blockquote>
+&lt;p>原文链接为：&lt;a href="https://pdos.csail.mit.edu/6.828/2020/labs/guidance.html">Lab guidance&lt;/a>&lt;/p></description></item><item><title>MIT 6.S081 Lab 0 搭建环境</title><link>https://yzhe819.github.io/posts/mit-6.s081-lab-0/</link><pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate><guid>https://yzhe819.github.io/posts/mit-6.s081-lab-0/</guid><description>&lt;blockquote>
 &lt;p>本篇文章主要记录MIT 6.S081实验环境的搭建和版本管理的配置。&lt;/p>
 &lt;/blockquote>
 &lt;p>官网链接：&lt;a href="https://pdos.csail.mit.edu/6.828/2020/tools.html">Lab: Tools&lt;/a>&lt;/p>
