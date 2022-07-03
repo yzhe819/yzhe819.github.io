@@ -3,7 +3,7 @@ title: "MIT 6.S081 Lab 0 搭建环境"
 date: 2022-06-07
 draft: false
 tags: ["中文","操作系统","6.S081"]
-slug: "mit-6.S081.lab-0"
+slug: "mit-6.S081-lab-0"
 ---
 
 > 本篇文章主要记录MIT 6.S081实验环境的搭建和版本管理的配置。

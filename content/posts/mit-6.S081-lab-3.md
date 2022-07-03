@@ -3,7 +3,7 @@ title: "MIT 6.S081 Lab 3 页表"
 date: 2022-06-19T01:55:24+12:00
 draft: false
 tags: ["中文","操作系统","6.S081"]
-slug: "mit-6.S081.lab-3"
+slug: "mit-6.S081-lab-3"
 ---
 
 > 本篇文章是第三个lab的记录
