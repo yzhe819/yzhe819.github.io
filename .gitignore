@@ -1,3 +1,6 @@
 /runtime/
 /resources/_gen/
 .hugo_build.lock
+
+# Hugo generated output. Source files live in content/, static/, and themes/.
+/public/

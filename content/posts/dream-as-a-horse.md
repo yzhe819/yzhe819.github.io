@@ -3,6 +3,7 @@ title: "以梦为马"
 date: 2022-05-29
 draft: false
 tags: ["中文","诗歌"]
+keywords: ["以梦为马","海子","诗歌","中文诗歌"]
 slug: "Dream-as-a-Horse"
 ---
 

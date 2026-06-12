@@ -1,5 +1,5 @@
 baseURL = "http://localhost:1313/"
-languageCode = "en"
+locale = "en"
 defaultContentLanguage = "en"
 title = "yzhe819"                        # site title                     # 网站标题
 theme = "zozo"
@@ -62,7 +62,7 @@ pygmentscodefencesguesssyntax = true
 
 # Your socail's url
 # 社交地址配置
-[social]
+[params.social]
   github = "https://github.com/yzhe819"
   # twitter = " "
   # facebook = " "

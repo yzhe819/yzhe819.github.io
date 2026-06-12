@@ -1,9 +1,10 @@
 ---
 title: "Installing Go in WSL2"
 date: 2022-06-17T14:49:41+12:00
-hidden: false
+draft: false
 tags: ["English","Go"]
-keywords: ["Go"]
+keywords: ["Go","Golang","WSL2","Ubuntu","Linux","environment setup","GOROOT","GOPATH"]
+slug: "study-go"
 ---
 
 > Just a record of installing Go in WSL from the command line.

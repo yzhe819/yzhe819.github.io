@@ -3,6 +3,7 @@ title: "MIT 6.S081 Lab 3 页表"
 date: 2022-06-19T01:55:24+12:00
 draft: false
 tags: ["中文","操作系统","6.S081"]
+keywords: ["MIT 6.S081","操作系统","xv6","页表","虚拟内存","RISC-V","kernel page table","copyin","copyinstr"]
 slug: "mit-6.S081-lab-3"
 ---
 

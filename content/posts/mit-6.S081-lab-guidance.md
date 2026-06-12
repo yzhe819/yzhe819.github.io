@@ -3,6 +3,7 @@ title: "MIT 6.S081 实验室指导"
 date: 2022-06-07T23:43:45+12:00
 draft: false
 tags: ["中文","操作系统","6.S081"]
+keywords: ["MIT 6.S081","操作系统","xv6","lab guidance","实验指导","调试","GDB","QEMU","RISC-V"]
 slug: "mit-6.S081-lab-guidance"
 ---
 
