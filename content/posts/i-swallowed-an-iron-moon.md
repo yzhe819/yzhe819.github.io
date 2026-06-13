@@ -26,8 +26,16 @@ slug: "i-swallowed-an-iron-moon"
 
 2013-12-19
 
+《我咽下一枚铁做的月亮》许立志
+
 ## 关于作者
 
-[许立志](https://zhida.zhihu.com/search?content_id=162573921&content_type=Article&match_order=1&q=%E8%AE%B8%E7%AB%8B%E5%BF%97&zhida_source=entity)，男，1990 年生，广东揭阳人。90 后深圳诗人，曾被誉为[打工文学](https://zhida.zhihu.com/search?content_id=162573921&content_type=Article&match_order=1&q=%E6%89%93%E5%B7%A5%E6%96%87%E5%AD%A6&zhida_source=entity)接班人，于 2014 年 10 月 1 日坠楼身亡，警方疑为自杀。
+许立志，男，1990年生，广东揭阳人。
 
-《我咽下一枚铁做的月亮》许立志
+90后深圳诗人，曾被誉为打工文学接班人。
+
+于2014年10月1日坠楼身亡，警方疑为自杀。
+
+许立志最后一条微博为"新的一天"。
+
+
