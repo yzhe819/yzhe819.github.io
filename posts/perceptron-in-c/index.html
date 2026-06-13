@@ -1,0 +1,40 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="yzhe819"><title>用C语言手搓感知机:神经网络的第一块积木 ｜ yzhe819</title><meta name=description content=" 手搓了一个感知机(神经网络最基本的单元)
+或许这就是硅基生物长出脑子的第一步？
+代码仓库：Github
+"><meta name=keywords content="感知机,Perceptron,神经网络,C语言,机器学习入门"><link rel="shortcut icon" href=https://yzhe819.github.io/images/favicon.ico><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/normalize.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/zozo.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/highlight.css></head><body><div class="main animate__animated animate__fadeInDown"><div class="nav_container animated fadeInDown"><div class=site_nav id=site_nav><ul><li><a href=/>Home</a></li><li><a href=/posts/>Archive</a></li><li><a href=/tags/>Tags</a></li><li><a href=/about/>About</a></li></ul></div><div class=menu_icon><a id=menu_icon><i class=ri-menu-line></i></a></div></div><div class="header animated fadeInDown"><div class=site_title_container><div class=site_title><h1><a href=https://yzhe819.github.io/><span>yzhe819</span></a></h1></div><div class=description><p class=sub_title>yzhe819's Blog</p><div class=my_socials><a href=https://github.com/yzhe819 title=github target=_blank><i class=ri-github-fill></i></a></div></div></div></div><div class=content><div class=post_page><div class="post animate__animated animate__fadeInDown"><div class="post_title post_detail_title"><h2><a href=/posts/perceptron-in-c/>用C语言手搓感知机:神经网络的第一块积木</a></h2><span class=date>2026.06.13</span></div><div class="post_content markdown"><blockquote><p>手搓了一个感知机(神经网络最基本的单元)</p></blockquote><p>或许这就是硅基生物长出脑子的第一步？</p><p>代码仓库：<a href=https://github.com/yzhe819/Perceptron>Github</a></p><h2 id=这是什么>这是什么?</h2><p>感知机(Perceptron)是神经网络最基础的组成单元,由 Frank Rosenblatt 在1957年提出。
+它模拟了生物神经元的工作方式:接收多个输入信号,根据各自的"权重"进行加权求和,再通过一个判断规则输出结果。</p><h2 id=权重矩阵的演化>权重矩阵的演化</h2><p>下图展示了权重矩阵在训练过程中的演化过程(每一帧对应一轮训练后的权重图):</p><p align=center><img src=/output.gif alt="Training Evolution" width=400 height=400></p><p>权重图使用紫色到黄色的渐变表示:</p><ul><li><strong>紫色</strong>:权重值较低/为负 → 该位置的像素会<strong>抑制</strong>输出(让模型更倾向于判断为"矩形")</li><li><strong>黄色</strong>:权重值较高/为正 → 该位置的像素会<strong>增强</strong>输出(让模型更倾向于判断为"圆形")</li></ul><h2 id=结构示意图>结构示意图</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>输入层                                 权重               求和与判断       输出
+</span></span><span class=line><span class=cl>                                          
+</span></span><span class=line><span class=cl>[0.5][0.5][0.5][0.6][0.7][0.5]  ─── W1  ~ W6  ──┐
+</span></span><span class=line><span class=cl>[0.5][0.6][0.7][0.8][0.7][0.5]  ─── W7  ~ W12 ──┤
+</span></span><span class=line><span class=cl>[0.5][0.7][0.9][0.9][0.8][0.5]  ─── W13 ~ W18 ──┤
+</span></span><span class=line><span class=cl>[0.5][0.8][0.9][0.9][0.9][0.6]  ─── W19 ~ W24 ──┼──────&gt;  ( ? ) ──────&gt; 圆？
+</span></span><span class=line><span class=cl>[0.5][0.7][0.8][0.9][0.7][0.5]  ─── W25 ~ W30 ──┤
+</span></span><span class=line><span class=cl>[0.5][0.6][0.7][0.7][0.6][0.5]  ─── W31 ~ W36 ──┤
+</span></span><span class=line><span class=cl>[0.5][0.5][0.6][0.6][0.5][0.5]  ─── W37 ~ W42 ──┘
+</span></span></code></pre></div><h2 id=判断公式>判断公式</h2><p>$$
+\text{output} = \sum_{i=1}^{n} x_i \cdot w_i
+$$</p><p>$$
+\text{output} > \text{bias} \implies \text{类别 A (圆形)}
+$$</p><p>$$
+\text{output} \leq \text{bias} \implies \text{类别 B (矩形)}
+$$</p><p>每个输入 $x_i$ 都对应一个权重 $w_i$,这个权重决定了"这个输入对最终结果有多大影响力"。</p><h2 id=训练原理>训练原理</h2><p>每一轮训练:</p><ul><li>如果<strong>矩形</strong>被误判为"圆形" → 把这个矩形的像素值,从权重矩阵里<strong>减掉</strong></li><li>如果<strong>圆形</strong>被误判为"矩形" → 把这个圆形的像素值,<strong>加到</strong>权重矩阵里</li></ul><p>每次"加圆减矩形",权重矩阵会逐渐被圆形的像素模式叠加、被矩形的像素模式抵消。多轮训练后,权重矩阵会自然演化出一个"圆形敏感"的模式。</p><h2 id=训练结果>训练结果</h2><div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[TRAIN - 0] Adjusted 192 times
+</span></span><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl>[TRAIN - 44] Adjusted 21 times
+</span></span><span class=line><span class=cl>[TRAIN - 45] Adjusted 30 times
+</span></span><span class=line><span class=cl>[TRAIN - 46] Adjusted 22 times
+</span></span><span class=line><span class=cl>[TRAIN - 47] Adjusted 8 times
+</span></span><span class=line><span class=cl>[TRAIN - 48] Adjusted 0 times
+</span></span><span class=line><span class=cl>[TRAIN - 49] Adjusted 0 times
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>The untrained model failed 200 times
+</span></span><span class=line><span class=cl>The fail rate of untrained model is 0.500000
+</span></span><span class=line><span class=cl>The trained model failed 175 times
+</span></span><span class=line><span class=cl>The fail rate of trained model is 0.437500
+</span></span><span class=line><span class=cl>Improvement after training: 12.50%
+</span></span></code></pre></div><p>训练后失败率有所下降,说明权重矩阵确实学到了一些"圆形"的特征。
+每一轮训练打印的 <code>Adjusted</code> 次数,会发现这个数字逐渐收敛。
+不过提升幅度有限(仅12.5%),这是因为感知机只有<strong>一层权重</strong>,只能学习一种非常简单的线性判断规则。</p><h2 id=一句话总结>一句话总结</h2><blockquote><p>感知机就是一堆带权重的开关,权重通过"试错-修正"不断调整,最终让整个系统学会对输入做出正确的判断。多个感知机叠加、连接,就构成了真正的神经网络。</p></blockquote><h2 id=致谢>致谢</h2><p>本项目的代码结构与实现思路参考自 <a href=https://github.com/tsoding/perceptron>tsoding/perceptron</a>,感谢原作者的开源分享。</p></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
+<a href=https://yzhe819.github.io/tags/c%E8%AF%AD%E8%A8%80/>C语言</a>
+<a href=https://yzhe819.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/>机器学习</a>
+<a href=https://yzhe819.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/>神经网络</a></span></div></div></div></div><div class=doc_comments></div></div></div></div><a id=back_to_top href=# class=back_to_top><i class=ri-arrow-up-s-line></i></a><footer class=footer><div class=powered_by><a href=https://varkai.com>Designed by VarKai,</a>
+<a href=http://www.gohugo.io/>Proudly published with Hugo</a></div><div class=footer_slogan><span></span></div></footer><script src=https://yzhe819.github.io/js/jquery-3.5.1.min.js></script><link href=https://yzhe819.github.io/css/fancybox.min.css rel=stylesheet><script src=https://yzhe819.github.io/js/fancybox.min.js></script><script src=https://yzhe819.github.io/js/zozo.js></script><script type=text/javascript async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">MathJax.Hub.Config({tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["[[","]]"]],processEscapes:!0,processEnvironments:!0,skipTags:["script","noscript","style","textarea","pre"],TeX:{equationNumbers:{autoNumber:"AMS"},extensions:["AMSmath.js","AMSsymbols.js"]}}}),MathJax.Hub.Queue(function(){var e,t=MathJax.Hub.getAllJax();for(e=0;e<t.length;e+=1)t[e].SourceElement().parentNode.className+=" has-jax"})</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style></body></html>
