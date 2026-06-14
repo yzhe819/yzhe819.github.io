@@ -1,5 +1,50 @@
-<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="yzhe819"><title>回到17世纪：怎么确定e的上下界 ｜ yzhe819</title><meta name=description content="如果你时间穿越回17世纪，怎么用数学工具确定自然常数e的上下界?
-"><meta name=keywords content="自然常数e,数学史,17世纪数学,微积分"><link rel="shortcut icon" href=https://yzhe819.github.io/images/favicon.ico><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/normalize.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/zozo.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/highlight.css></head><body><div class="main animate__animated animate__fadeInDown"><div class="nav_container animated fadeInDown"><div class=site_nav id=site_nav><ul><li><a href=/>Home</a></li><li><a href=/posts/>Archive</a></li><li><a href=/tags/>Tags</a></li><li><a href=/about/>About</a></li></ul></div><div class=menu_icon><a id=menu_icon><i class=ri-menu-line></i></a></div></div><div class="header animated fadeInDown"><div class=site_title_container><div class=site_title><h1><a href=https://yzhe819.github.io/><span>yzhe819</span></a></h1></div><div class=description><p class=sub_title>yzhe819's Blog</p><div class=my_socials><a href=https://github.com/yzhe819 title=github target=_blank><i class=ri-github-fill></i></a></div></div></div></div><div class=content><div class=post_page><div class="post animate__animated animate__fadeInDown"><div class="post_title post_detail_title"><h2><a href=/posts/bounding-e-17th-century/>回到17世纪：怎么确定e的上下界</a></h2><span class=date>2026.06.13</span></div><div class="post_content markdown"><p>如果你时间穿越回17世纪，怎么用数学工具确定自然常数e的上下界?</p></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="yzhe819"><title>梦回17世纪：怎么确定自然常数e的上下界 ｜ yzhe819</title><meta name=description content="梦回17世纪：怎么确定自然常数e的上下界
+$$2 < e < 3$$
+"><meta name=keywords content="自然常数e,数学,无穷小,微积分"><link rel="shortcut icon" href=https://yzhe819.github.io/images/favicon.ico><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/normalize.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/zozo.css><link rel=stylesheet type=text/css media=screen href=https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css><link rel=stylesheet type=text/css media=screen href=https://yzhe819.github.io/css/highlight.css></head><body><div class="main animate__animated animate__fadeInDown"><div class="nav_container animated fadeInDown"><div class=site_nav id=site_nav><ul><li><a href=/>Home</a></li><li><a href=/posts/>Archive</a></li><li><a href=/tags/>Tags</a></li><li><a href=/about/>About</a></li></ul></div><div class=menu_icon><a id=menu_icon><i class=ri-menu-line></i></a></div></div><div class="header animated fadeInDown"><div class=site_title_container><div class=site_title><h1><a href=https://yzhe819.github.io/><span>yzhe819</span></a></h1></div><div class=description><p class=sub_title>yzhe819's Blog</p><div class=my_socials><a href=https://github.com/yzhe819 title=github target=_blank><i class=ri-github-fill></i></a></div></div></div></div><div class=content><div class=post_page><div class="post animate__animated animate__fadeInDown"><div class="post_title post_detail_title"><h2><a href=/posts/bounding-e-17th-century/>梦回17世纪：怎么确定自然常数e的上下界</a></h2><span class=date>2026.06.13</span></div><div class="post_content markdown"><p>梦回17世纪：怎么确定自然常数e的上下界</p><p>$$2 &lt; e &lt; 3$$</p><h1 id=自然常数e的起源>自然常数e的起源</h1><p>伯努利在研究复利计算时，考虑这样一个问题：本金 1 元，年利率 100%，如果一年内复利 n 次，到期本利和是多少？</p><p>到期本利和为 $\left(1+\frac{1}{n}\right)^n$，令 $n \to \infty$，便得到：</p><p>$$
+e = \lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n
+$$</p><p>他发现随着 n 不断增大，这个式子的值会越来越大，但又不会无限膨胀——它似乎被某个神秘的数字压着，永远突破不了。
+后来欧拉看到了这个常数，将它命名为 e，取自 exponential（指数）的首字母。</p><p>那么当时是怎么证明这个极限存在且有限的？在那个年代，数学家能用的工具其实很朴素：单调有界定理——只要能证明这个数列单调递增，同时又有一个上界压着，极限自然存在。</p><p>关键的难点在于：当 n 趋于无穷时，$\frac{1}{n}$​ 趋向于无穷小，式子里的每一项都在微妙地变化。数学家需要驯服这个无穷小，才能把上界算清楚。</p><h1 id=幽灵般的无穷小>幽灵般的无穷小</h1><p>当我们对 $\left(1+\frac{1}{n}\right)^n$ 用二项式定理展开：</p><p>$$
+(a+b)^n = \sum_{k=0}^{n} \binom{n}{k} a^{n-k} b^k
+$$</p><p>令 $a = 1$，$b = \frac{1}{n}$，得到：</p><p>$$
+\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{n} \binom{n}{k} \cdot \frac{1}{n^k}
+$$</p><p>其中：</p><p>$$
+\binom{n}{k} = \frac{n!}{k!(n-k)!} = \frac{n(n-1)(n-2)\cdots(n-k+1)}{k!}
+$$</p><p>所以每一项变成：</p><p>$$
+\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{n} \frac{1}{k!} \cdot \left(1-\frac{1}{n}\right)\left(1-\frac{2}{n}\right)\cdots\left(1-\frac{k-1}{n}\right)
+$$</p><p>取极限 $n \to \infty$ 时，每个因子中的 $\frac{1}{n}$ 趋向于无穷小：</p><p>$$
+\left(1-\frac{1}{n}\right)\left(1-\frac{2}{n}\right)\cdots\left(1-\frac{k-1}{n}\right) \to 1
+$$</p><p>如果我们选择像当时的物理学家或者凭借直觉去处理这个无穷小，<strong>我们会直接把无穷小看作是零</strong>。</p><p>然后直接约掉。上面的部分就会变成了1.那这样整个式子该多么简洁啊！</p><p>$$
+\lim_{n \to \infty}\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{\infty} \frac{1}{k!}
+$$</p><p><strong>但我们不能这样做！</strong></p><p>牛顿和莱布尼茨在处理物理问题时，确实会把无穷小直接消去——反正它"太小了"，基于直觉扔掉就行。</p><p>这种做法粗暴有效，但严谨的数学逻辑上站不住脚，也正是后来引发<strong>第一次数学危机</strong>的根源。</p><p>直到柯西建立了 $\varepsilon$-$\delta$ 语言，才在逻辑上严格定义了极限，彻底终结了这场争论。</p><p>但问题是——在那个时候数学家没有这套无穷小的工具。</p><p>既然不能直接把无穷小当作是0或者处理无穷小，必须另想办法！</p><h1 id=绕过无穷小>绕过无穷小</h1><p>让我们回到最开始——无穷小是怎么出现的？</p><p>因为我们让 $n$ 趋于无穷大，$\frac{1}{n}$ 自然就趋向于无穷小。
+无穷小是无穷大的影子，只要我们还在处理 $n \to \infty$，它就如影随形。</p><p>那么办法也很自然：先不让 $n$ 跑到无穷大，把 $\infty$ 换成任意大的有限数 $N$。
+$n$ 是具体的数，$\frac{1}{n}$ 也是具体的数，无穷小的幽灵暂时消失了。</p><p>$$
+\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{N} \frac{1}{k!} \cdot \left(1-\frac{1}{n}\right)\cdots\left(1-\frac{k-1}{n}\right) + \text{（余项）}
+$$</p><p>当 $n \geq 2$ 时，每个因子满足 $0 &lt; \left(1-\frac{j}{n}\right) &lt; 1$，所以连乘部分小于 $1$，从而：</p><p>$$
+\left(1+\frac{1}{n}\right)^n &lt; \sum_{k=0}^{N} \frac{1}{k!}
+$$</p><p>而部分和小于无穷级数的全和，因此：</p><p>$$
+\left(1+\frac{1}{n}\right)^n &lt; \sum_{k=0}^{N} \frac{1}{k!} &lt; \sum_{k=0}^{\infty} \frac{1}{k!}
+$$</p><h1 id=等比级数迷思>等比级数迷思</h1><p>关于右边的级数 $\sum_{k=0}^{\infty} \frac{1}{k!}$，我们需要继续分析。</p><p>在现代，我们知道等比级数在 $|r| &lt; 1$ 时必定收敛，求和公式为：</p><p>$$
+\sum_{k=0}^{\infty} ar^k = \frac{a}{1-r}
+$$</p><p>但推导这个公式时，有限项的情形是干净的：</p><p>$$
+\sum_{k=0}^{N} ar^k = \frac{a(1-r^{N+1})}{1-r}
+$$</p><p>令 $N \to \infty$，$r^{N+1}$ 趋向无穷小——我们又遇到了同样的无穷小困境，无法严格处理。</p><p>一种严谨的办法是反证法：</p><p>假设极限 $L$ 存在但小于 $\frac{a}{1-r}$，可以推出矛盾；
+假设 $L$ 大于 $\frac{a}{1-r}$，同样矛盾。所以 $L$ 只能等于 $\frac{a}{1-r}$。</p><p>全程没有直接操作无穷小，逻辑是严谨的。</p><h1 id=级数比较>级数比较</h1><p>通过放缩法，将 $\frac{1}{k!}$ 与等比级数 $\frac{1}{2^{k-1}}$ 进行比较：</p><p>$$
+1 + \frac{1}{2} + \frac{1}{6} + \frac{1}{24} + \cdots \leq 1 + \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + \cdots
+$$</p><p>$$
+\frac{1}{k!} \leq \frac{1}{2^{k-1}}, \quad k \geq 1
+$$</p><p>$$
+\sum_{k=1}^{\infty} \frac{1}{k!} \leq \sum_{k=1}^{\infty} \frac{1}{2^{k-1}} = \sum_{k=0}^{\infty} \frac{1}{2^k} = \frac{1}{1-\frac{1}{2}} = 2
+$$</p><p>在左边补上 $k=0$ 的项（即 $\frac{1}{0!} = 1$）：</p><p>$$
+\sum_{k=0}^{\infty} \frac{1}{k!} = 1 + \sum_{k=1}^{\infty} \frac{1}{k!} \leq 1 + 2 = 3
+$$</p><p>又因为 $\left(1+\frac{1}{n}\right)^n$ 是单调递增的，当 $n=1$ 时取得最小值：</p><p>$$
+\left(1+\frac{1}{1}\right)^1 = 2
+$$</p><p>所以对所有 $n \geq 1$，都有 $\left(1+\frac{1}{n}\right)^n \geq 2$，从而 $e > 2$。</p><h1 id=找到了>找到了</h1><p>最后我们得到了这样一串不等式链，找到了e的上下界，为17世纪的我们鼓掌！</p><p>$$
+2 &lt; \left(1 + \frac{1}{n}\right)^n &lt; \sum_{k=0}^{N} \frac{1}{k!} &lt; \sum_{k=0}^{\infty} \frac{1}{k!} &lt; 1+\sum_{k=0}^{\infty} \frac{1}{2^k} = 3
+$$</p><h1 id=回到现代数学>回到现代数学</h1><p>根据柯西对无穷级数的严格定义，无穷级数的值被定义为部分和的极限：</p><p>$$
+\sum_{k=0}^{\infty} \frac{1}{k!} = \lim_{N \to \infty} \sum_{k=0}^{N} \frac{1}{k!}
+$$</p><p>这正是我们一直在回避的极限——但现在有了严格的 $\varepsilon$-$\delta$ 语言，可以放心使用。</p><p>再结合单调有界定理，$\left(1+\frac{1}{n}\right)^n$ 单调递增有上界，极限存在，记为 $e$。最终得到：</p><p>$$
+2 &lt; e = \lim_{n \to \infty}\left(1+\frac{1}{n}\right)^n = \sum_{k=0}^{\infty} \frac{1}{k!} &lt; 3
+$$</p><p>绕了一大圈，我们没有动用任何"无穷小直接消去"的把戏，严谨地走完了整个证明。</p></div><div class=post_footer><div class=meta><div class=info><span class="field tags"><i class=ri-stack-line></i>
 <a href=https://yzhe819.github.io/tags/%E6%95%B0%E5%AD%A6/>数学</a>
-<a href=https://yzhe819.github.io/tags/%E6%95%B0%E5%AD%A6%E5%8F%B2/>数学史</a></span></div></div></div></div><div class=doc_comments></div></div></div></div><a id=back_to_top href=# class=back_to_top><i class=ri-arrow-up-s-line></i></a><footer class=footer><div class=powered_by><a href=https://varkai.com>Designed by VarKai,</a>
+<a href=https://yzhe819.github.io/tags/%E5%BE%AE%E7%A7%AF%E5%88%86/>微积分</a></span></div></div></div></div><div class=doc_comments></div></div></div></div><a id=back_to_top href=# class=back_to_top><i class=ri-arrow-up-s-line></i></a><footer class=footer><div class=powered_by><a href=https://varkai.com>Designed by VarKai,</a>
 <a href=http://www.gohugo.io/>Proudly published with Hugo</a></div><div class=footer_slogan><span></span></div></footer><script src=https://yzhe819.github.io/js/jquery-3.5.1.min.js></script><link href=https://yzhe819.github.io/css/fancybox.min.css rel=stylesheet><script src=https://yzhe819.github.io/js/fancybox.min.js></script><script src=https://yzhe819.github.io/js/zozo.js></script><script type=text/javascript async src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">MathJax.Hub.Config({tex2jax:{inlineMath:[["$","$"],["\\(","\\)"]],displayMath:[["$$","$$"],["[[","]]"]],processEscapes:!0,processEnvironments:!0,skipTags:["script","noscript","style","textarea","pre"],TeX:{equationNumbers:{autoNumber:"AMS"},extensions:["AMSmath.js","AMSsymbols.js"]}}}),MathJax.Hub.Queue(function(){var e,t=MathJax.Hub.getAllJax();for(e=0;e<t.length;e+=1)t[e].SourceElement().parentNode.className+=" has-jax"})</script><style>code.has-jax{font:inherit;font-size:100%;background:inherit;border:inherit;color:#515151}</style></body></html>
