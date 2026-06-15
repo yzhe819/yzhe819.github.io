@@ -1,8 +1,8 @@
 ---
 title: "如幻般的青春物语"
-date: 2026-06-14T16:30:00+12:00
-lastmod: 2026-06-14T16:30:00+12:00
-draft: true
+date: 2025-08-20
+lastmod: 2025-08-20
+draft: false
 tags: ["散文","回忆"]
 keywords: ["青春","小镇"]
 slug: "youth-story"
