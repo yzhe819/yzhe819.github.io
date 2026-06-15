@@ -1,3 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>计算机科学 on yzhe819</title><link>https://yzhe819.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/</link><description>Recent content in 计算机科学 on yzhe819</description><generator>Hugo</generator><language>en</language><lastBuildDate>Mon, 15 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://yzhe819.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/index.xml" rel="self" type="application/rss+xml"/><item><title>用自己编译自己：编译器与那个古老的悖论</title><link>https://yzhe819.github.io/posts/compiler-bootstrapping-paradox/</link><pubDate>Mon, 15 Jun 2026 00:00:00 +0000</pubDate><guid>https://yzhe819.github.io/posts/compiler-bootstrapping-paradox/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;先有鸡，还是先有蛋？先有编译器，还是先有源码？自举（Bootstrapping）藏着一个和生命起源一样古老的悖论——而工程师们，早已悄悄解开了它。&lt;/p&gt;
-&lt;/blockquote&gt;</description></item></channel></rss>
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://github.com/yzhe819/C-Compiler"&gt;代码仓库&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这是一个用 C 语言写成的 &lt;strong&gt;C 语言子集编译器&lt;/strong&gt;，灵感来源于 &lt;a href="https://github.com/rswier/c4"&gt;c4&lt;/a&gt;。它足够小，可以编译自身；足够完整，足以让你理解一个编译器从字符到执行的全过程。&lt;/p&gt;</description></item></channel></rss>
